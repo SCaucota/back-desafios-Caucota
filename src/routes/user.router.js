@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
             res.status(400).send({ error: "Ya existe un usuario con ese correo" });
         }
 
-        const role = email === "adminCoder@coder.com" ? "admin" : "user";
+        const role = email === "adminCoder@coder.com" && password === "adminCod3r123" ? "admin" : "user";
 
         const newUser = await userModel.create({
             first_name,
