@@ -1,0 +1,36 @@
+body{
+    padding: 20px;
+    margin: 20px;
+}
+
+h1{
+    color: gray;
+    text-align: center;
+    text-decoration: underline;
+}
+
+#productsContainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 5rem;
+    margin-top: 2rem;
+}
+
+#formAddProduct{
+    margin-bottom: 3rem;
+}
+
+#homeList{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 5rem;
+    margin-top: 2rem;
+}
+
+/*---HOME.HANDLEBARS---*/
+.mensajeBienvenida{
+    text-align: center;
+    margin-top: 2rem;
+}

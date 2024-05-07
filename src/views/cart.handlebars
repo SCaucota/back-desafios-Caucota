@@ -1,0 +1,18 @@
+{{#if cart}}
+  {{#each cart}}
+    <div class="product">
+      <h1>{{ product.title }}</h1>
+      <p><strong>Description:</strong> {{ product.description }}</p>
+      <p><strong>Price:</strong> {{ product.price }}</p>
+      <p><strong>Image:</strong> {{ product.img }}</p>
+      <p><strong>Status:</strong> {{ product.status }}</p>
+      <p><strong>Stock:</strong> {{ product.stock }}</p>
+      <p><strong>Category:</strong> {{ product.category }}</p>
+      <h5><strong>Quantity:</strong>{{quantity}}</h5>
+    </div>
+  {{/each}}
+{{else}}
+  <p>No hay productos en el carrito.</p>
+{{/if}}
+
+<a href="/products">Volver a la página de productos</a>

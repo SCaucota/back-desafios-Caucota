@@ -1,0 +1,26 @@
+{{#if user.isAdmin}}
+    <h1>¡Bienvenido/a, administrador/a {{ user.first_name }}  {{ user.last_name }}!</h1>
+{{else}}
+    {{#if user.first_name}}
+        <h1>¡Bienvenido/a, {{ user.first_name }}!</h2>
+    {{/if}}
+{{/if}}
+
+<h3>Nuestros libros: </h3>
+
+<div id="homeList">
+    {{>card}}
+</div>
+
+
+{{#if hasPrevPage}}
+    <a href="{{prevLink}}">Anterior</a>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="{{nextLink}}">Siguiente</a> 
+{{/if}}
+
+<p>Página {{page}} de {{totalPages}} </p>
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>

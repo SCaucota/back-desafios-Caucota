@@ -1,0 +1,10 @@
+{{#each payload}}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h2 class="card-title">Título: {{title}}</h2>
+        <p class="card-text">Descripción: {{description}}</p>
+        <p class="card-text">Precio: {{price}}</p>
+        <a href="/products/{{_id}}" class="btn btn-primary seeDetailProduct">Ver</a>
+    </div>
+</div>
+{{/each}}

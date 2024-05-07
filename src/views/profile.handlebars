@@ -1,0 +1,8 @@
+<h1>Mi Perfil</h1>
+<p>Hola {{user.first_name}} {{user.last_name}}!</p>
+{{#if user.isAdmin}}
+    <p>Rol: Administrador</p>
+{{/if}}
+<p>Email: {{user.email}}</p>
+<p>Edad: {{user.age}}</p>
+<a href="/api/logout">Cerrar Sesión</a>
