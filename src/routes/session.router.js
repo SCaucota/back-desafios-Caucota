@@ -11,6 +11,9 @@ router.post("/login", async (req, res) => {
         if(user) {
             if(isValidPassword(password, user)) {
                 req.session.login = true;
+
+                const role = email === "adminCoder@coder.com" && password === "adminCod3r123" ? "admin" : "user";
+            
                 req.session.user = {
                     email: user.email,
                     age: user.age,
@@ -19,8 +22,6 @@ router.post("/login", async (req, res) => {
                     role: user.role
                 };
 
-                const role = email === "adminCoder@coder.com" && password === "adminCod3r123" ? "admin" : "user";
-            
                 if(role === "admin"){
                     req.session.user.isAdmin = true
                 }
@@ -61,7 +62,7 @@ router.post("/login", passport.authenticate("login", {
 
     req.session.login = true;
 
-    res.redirect("/profile");
+    res.redirect("/products");
 });
 
 router.get("/faillogin", (req, res) => {
@@ -75,7 +76,7 @@ router.get("/githubcallback", passport.authenticate("github", {
     async (req,res) => {
         req.session.user = req.user;
         req.session.login = true;
-        res.redirect("/profile");
+        res.redirect("/products");
     })
 
 export default router;

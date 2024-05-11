@@ -45,8 +45,6 @@ app.use("/api", cartsRouter);
 app.use("/api", sessionRouter);
 app.use("/api", userRouter);
 
-/* app.use(cookieParser()); */
-
 const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto http//localhost:${PUERTO}`);
 });

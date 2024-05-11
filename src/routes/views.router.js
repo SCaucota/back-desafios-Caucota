@@ -9,8 +9,11 @@ const cartManager = new CartManager;
 
 
 router.get("/", async (req,res) => {
-    res.render("home");
-})
+    if(req.session.login) {
+        return res.redirect("/products");
+    }
+    res.render("login");
+});
 
 router.get("/products", async (req, res) => {
     try{
