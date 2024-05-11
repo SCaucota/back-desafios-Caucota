@@ -11,6 +11,8 @@ import userRouter from "./routes/user.router.js";
 
 import ProductManager from "./controllers/productManager.js";
 import MessageModel from "./models/message.model.js";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 /* import cookieParser from "cookie-parse"; */
 import "./database.js";
 const app = express();
@@ -22,6 +24,7 @@ app.use(session({
     saveUninitialized:true,   
 }));
 
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static("./src/public/"));
@@ -31,6 +34,10 @@ app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
 
 app.set("views", "./src/views");
+
+app.use(passport.initialize());
+app.use(passport.session());
+initializePassport();
 
 app.use("/", viewsRouter);
 app.use("/api", productsRouter);

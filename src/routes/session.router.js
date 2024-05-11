@@ -1,6 +1,7 @@
 import express from "express";
 import userModel from "../models/user.model.js";
 import { isValidPassword } from "../utils/hashbcrypt.js";
+import passport from "passport";
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
@@ -17,6 +18,13 @@ router.post("/login", async (req, res) => {
                     last_name: user.last_name,
                     role: user.role
                 };
+
+                const role = email === "adminCoder@coder.com" && password === "adminCod3r123" ? "admin" : "user";
+            
+                if(role === "admin"){
+                    req.session.user.isAdmin = true
+                }
+
                 res.redirect("/products");
             }else {
                 res.status(401).send({ error: "Contraseña incorrecta" });
@@ -35,5 +43,39 @@ router.get("/logout", (req, res) => {
     }
     res.redirect("/login");
 });
+
+router.post("/login", passport.authenticate("login", {
+    failureRedirect: "/faillogin",
+}), async (req, res) => {
+    if(!req.user){
+        return res.status(400).send("Credenciales invalidas");
+    }
+
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        email: req.user.email,
+        age: req.user.age,
+        role: req.user.role
+    };
+
+    req.session.login = true;
+
+    res.redirect("/profile");
+});
+
+router.get("/faillogin", (req, res) => {
+    res.send("Credenciales invalidas");
+});
+
+router.get("/github", passport.authenticate("github", {scope: ["user:email"]}), async (req, res) => {});
+
+router.get("/githubcallback", passport.authenticate("github", {
+    failureRedirect: "/login"}),
+    async (req,res) => {
+        req.session.user = req.user;
+        req.session.login = true;
+        res.redirect("/profile");
+    })
 
 export default router;
