@@ -5,4 +5,6 @@
 {{/if}}
 <p>Email: {{user.email}}</p>
 <p>Edad: {{user.age}}</p>
-<a href="/api/logout">Cerrar Sesión</a>
+<form action="/api/logout" method="POST">
+    <button type="submit">Cerrar Sesión</button>
+</form>

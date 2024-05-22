@@ -1,32 +1,25 @@
 import express from "express";
 import exphbs from "express-handlebars";
-import session from "express-session";
 import { Server } from "socket.io";
 
 import viewsRouter from "./routes/views.router.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
-import sessionRouter from "./routes/session.router.js";
+import sessionRouter from "./routes/sessions.router.js";
 import userRouter from "./routes/user.router.js";
 
 import ProductManager from "./controllers/productManager.js";
 import MessageModel from "./models/message.model.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-/* import cookieParser from "cookie-parse"; */
+import cookieParser from "cookie-parser";
 import "./database.js";
 const app = express();
 const PUERTO = 8080;
 
-app.use(session({
-    secret:"secretCoder",
-    resave: true, 
-    saveUninitialized:true,   
-}));
-
-
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(cookieParser());
 app.use(express.static("./src/public/"));
 
 app.engine("handlebars", exphbs.engine());
@@ -35,14 +28,16 @@ app.set("view engine", "handlebars");
 
 app.set("views", "./src/views");
 
+initializePassport();
+
 app.use(passport.initialize());
 app.use(passport.session());
-initializePassport();
+
 
 app.use("/", viewsRouter);
 app.use("/api", productsRouter);
 app.use("/api", cartsRouter);
-app.use("/api", sessionRouter);
+app.use("/api/session", sessionRouter)
 app.use("/api", userRouter);
 
 const httpServer = app.listen(PUERTO, () => {

@@ -3,19 +3,29 @@ import { Router } from "express";
 import ProductManager from "../controllers/productManager.js";
 import CartManager from "../controllers/cartManager.js";
 import ProductModel from "../models/product.model.js";
+import passport from "passport";
 const router = Router();
 const productManager = new ProductManager;
 const cartManager = new CartManager;
 
+function checkAuthenticated(req, res, next) {
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (user) {
+            return res.redirect('/products');
+        }
+        next();
+    })(req, res, next);
+}
 
-router.get("/", async (req,res) => {
-    if(req.session.login) {
-        return res.redirect("/products");
-    }
+
+router.get("/", checkAuthenticated, (req,res) => {
     res.render("login");
 });
 
-router.get("/products", async (req, res) => {
+router.get("/products", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
     try{
 
         const page = parseInt(req.query.page) || 1;
@@ -50,7 +60,7 @@ router.get("/products", async (req, res) => {
             hasNextPage: books.nextPage ? true : false,
             prevLink: books.hasPrevPage ? `/products?page=${books.prevPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
             nextLink: books.hasNextPage ? `/products?page=${books.nextPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
-            user: req.session.user
+            user: req.user
         });
 
     }catch (error){
@@ -58,15 +68,15 @@ router.get("/products", async (req, res) => {
     }
 });
 
-router.get("/chat", async (req, res) => {
+router.get("/chat", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
     res.render("chat");
 })
 
-router.get("/realtimeproducts", async (req, res) => {
+router.get("/realtimeproducts", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
     res.render("realtimeproducts");
 });
 
-router.get("/products/:id", async (req, res) => {
+router.get("/products/:id", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
     const productId = req.params.id;
     try{
         const product = await productManager.getProductById(productId);
@@ -82,7 +92,7 @@ router.get("/products/:id", async (req, res) => {
     }
 });
 
-router.get("/carts/:cid", async (req, res) => {
+router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
     const cartId = req.params.cid;
     try{
         const cart = await cartManager.getCartProducts(cartId);
@@ -99,26 +109,21 @@ router.get("/carts/:cid", async (req, res) => {
     }
 });
 
-router.get("/login", async (req, res) => {
-    if(req.session.login) {
-        return res.redirect("/products");
-    }
+router.get("/login", checkAuthenticated, (req, res) => {
     res.render("login");
 });
 
-router.get("/register", async (req, res) => {
-    if(req.session.login) {
-        return res.redirect("/profile");
-    }
+router.get("/register", checkAuthenticated, async (req, res) => {
     res.render("register");
 });
 
-router.get("/profile", async (req, res) => {
-    if(!req.session.login) {
-        return res.redirect("/login");
-    };
+router.get("/profile", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
+    res.render("profile", {user: req.user});
+})
 
-    res.render("profile", {user: req.session.user});
+router.get("/admin", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
+    const isAdmin = req.user.role === "admin";
+    res.render("admin", {isAdmin});
 })
 
 export default router;

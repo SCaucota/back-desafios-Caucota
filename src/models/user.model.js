@@ -6,8 +6,7 @@ const userSchema = mongoose.Schema({
         required: true
     },
     last_name: {
-        type: String,
-        //required: true
+        type: String
     },
     email: {
         type: String,
@@ -16,12 +15,15 @@ const userSchema = mongoose.Schema({
         unique: true
     },
     password: {
-        type: String,
-        //required: true
+        type: String
     },
     age: {
         type: Number,
         required: true
+    },
+    cart:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "carts"
     },
     role: {
         type: String,
@@ -29,6 +31,11 @@ const userSchema = mongoose.Schema({
         default: 'user'
     }
 });
+
+userSchema.pre("findOne", function(next) {
+    this.populate("cart");
+    next();
+})
 
 const UserModel = mongoose.model("users", userSchema);
 
