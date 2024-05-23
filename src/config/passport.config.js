@@ -1,8 +1,9 @@
 import passport from "passport";
 import UserModel from "../models/user.model.js";
 import GitHubStrategy from "passport-github2";
-import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
 import jwt from "passport-jwt";
+import CartManager from "../controllers/cartManager.js";
+const cartManager = new CartManager();
 
 
 const JWTStrategy = jwt.Strategy;
@@ -17,7 +18,7 @@ const cookieExtractor = (req) => {
 }
 
 const initializePassport = () => {
-    passport.use("current", new JWTStrategy({
+    passport.use("jwt", new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
         secretOrKey: "coderhouse"
     }, async (jwt_payload, done) => {
@@ -32,7 +33,7 @@ const initializePassport = () => {
             return done(error, false);
         }
     })),
-    
+
     passport.use("github", new GitHubStrategy({
         clientID: "Iv23liDNEaK4kzYyfEe3",
         clientSecret: "beca033de33bdad42b4cbe022b129f003ac24622",
@@ -42,13 +43,16 @@ const initializePassport = () => {
         try {
             let user = await UserModel.findOne({email: profile._json.email}).lean();
 
+            const newCartId = await cartManager.addCart();
+
             if(!user) {
                 let newUser = {
                     first_name: profile._json.name,
                     last_name: "",
                     age: 36,
                     email: profile._json.email,
-                    password: ""
+                    password: "",
+                    cart: newCartId
                 };
 
                 let result = await UserModel.create(newUser);
@@ -60,6 +64,19 @@ const initializePassport = () => {
             return done(error);
         }
     }))
+
+    passport.serializeUser((user, done) => {
+        done(null, user._id);
+    });
+
+    passport.deserializeUser(async (id, done) => {
+        try {
+            const user = await UserModel.findById(id).lean();
+            done(null, user);
+        } catch (error) {
+            done(error);
+        }
+    });
 };
 
 

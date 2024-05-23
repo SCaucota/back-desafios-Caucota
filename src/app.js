@@ -5,7 +5,7 @@ import { Server } from "socket.io";
 import viewsRouter from "./routes/views.router.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
-import sessionRouter from "./routes/sessions.router.js";
+import sessionsRouter from "./routes/sessions.router.js";
 import userRouter from "./routes/user.router.js";
 
 import ProductManager from "./controllers/productManager.js";
@@ -21,6 +21,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(express.static("./src/public/"));
+app.use(passport.initialize());
+initializePassport();
 
 app.engine("handlebars", exphbs.engine());
 
@@ -28,16 +30,11 @@ app.set("view engine", "handlebars");
 
 app.set("views", "./src/views");
 
-initializePassport();
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 
 app.use("/", viewsRouter);
 app.use("/api", productsRouter);
 app.use("/api", cartsRouter);
-app.use("/api/session", sessionRouter)
+app.use("/api/sessions", sessionsRouter)
 app.use("/api", userRouter);
 
 const httpServer = app.listen(PUERTO, () => {

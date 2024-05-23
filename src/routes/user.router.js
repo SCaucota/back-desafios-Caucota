@@ -2,8 +2,10 @@ import express from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/user.model.js";
+import CartManager from "../controllers/cartManager.js";
 const router = express.Router();
 import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
+const cartManager = new CartManager();
 
 router.post("/register", async (req, res) => {
     const {first_name, last_name, email, age, role} = req.body;
@@ -15,18 +17,21 @@ router.post("/register", async (req, res) => {
             return res.status(400).send("El usuario ya existe");
         }
 
+        const newCartId = await cartManager.addCart();
+
         const newUser = new UserModel({
             first_name,
             last_name,
             email,
             age,
             password: createHash(req.body.password),
+            cart: newCartId,
             role,
         });
 
         await newUser.save();
 
-        const token = jwt.sign({email: newUser.email, first_name: newUser.first_name, last_name: newUser.last_name, age: newUser.age, role: newUser.role}, "coderhouse", { expiresIn: "1h" });
+        const token = jwt.sign({email: newUser.email, first_name: newUser.first_name, last_name: newUser.last_name, age: newUser.age, cart: newUser.cart, role: newUser.role}, "coderhouse", { expiresIn: "1h" });
 
         res.cookie("coderCookieToken", token, {
             maxAge: 3600000,
@@ -57,7 +62,7 @@ router.post("/login", async (req, res) => {
             return res.status(401).send("Contraseña incorrecta");
         }
 
-        const token = jwt.sign({email: user.email, first_name: user.first_name, last_name: user.last_name, age: user.age, role: user.role}, "coderhouse", {expiresIn: "1h"});
+        const token = jwt.sign({email: user.email, first_name: user.first_name, last_name: user.last_name, age: user.age, cart: user.cart, role: user.role}, "coderhouse", {expiresIn: "1h"});
 
         res.cookie("coderCookieToken", token, {
             maxAge: 3600000,
@@ -74,7 +79,7 @@ router.get("/github", passport.authenticate("github", { scope: ["user:email"], s
 
 router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login", session: false }), (req, res) => {
     const token = jwt.sign(
-        {email: req.user.email, first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, role: req.user.role}, "coderhouse", {expiresIn: "1h"}
+        {email: req.user.email, first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, cart: req.user.cart,ole: req.user.role}, "coderhouse", {expiresIn: "1h"}
     )
 
     res.cookie("coderCookieToken", token, {
@@ -95,7 +100,6 @@ router.post("/logout", (req, res) => {
 })
 
 router.get("/admin", passport.authenticate("jwt", {session: false}), (req, res) => {
-    console.log(req.user.email);
     if ( req.user.role !== "admin") {
         return res.status(403).send("Acceso Denegado");
     }
