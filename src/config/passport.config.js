@@ -1,8 +1,8 @@
 import passport from "passport";
-import UserModel from "../models/user.model.js";
 import GitHubStrategy from "passport-github2";
 import jwt from "passport-jwt";
 import services from "../services/index.js";
+import configObject from "./config.js";
 
 
 const JWTStrategy = jwt.Strategy;
@@ -19,10 +19,10 @@ const cookieExtractor = (req) => {
 const initializePassport = () => {
     passport.use("jwt", new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: "coderhouse"
+        secretOrKey: configObject.JWT_SECRET
     }, async (jwt_payload, done) => {
         try {
-            const user = await UserModel.findOne({ email: jwt_payload.email }).lean();
+            const user = await services.userServices.getUserByEmail(jwt_payload.email).lean();
             if (user) {
                 return done(null, user);
             } else {
@@ -34,13 +34,13 @@ const initializePassport = () => {
     })),
 
     passport.use("github", new GitHubStrategy({
-        clientID: "Iv23liDNEaK4kzYyfEe3",
-        clientSecret: "beca033de33bdad42b4cbe022b129f003ac24622",
+        clientID: configObject.GITHUB_CLIENT_ID,
+        clientSecret: configObject.GITHUB_CLIENT_SECRET,
         callbackURL: "http://localhost:8080/api/githubcallback"
     }, async (accessToken, refreshToken, profile, done) => {
 
         try {
-            let user = await UserModel.findOne({email: profile._json.email}).lean();
+            let user = await services.userServices.getUserByEmail(profile._json.email).lean();
 
             const newCartId = await services.cartService.addCart();
 
@@ -54,7 +54,7 @@ const initializePassport = () => {
                     cart: newCartId
                 };
 
-                let result = await UserModel.create(newUser);
+                let result = await services.userServices.createUser(newUser);
                 done(null, result);
             }else {
                 done(null, user);
@@ -70,7 +70,7 @@ const initializePassport = () => {
 
     passport.deserializeUser(async (id, done) => {
         try {
-            const user = await UserModel.findById(id).lean();
+            const user = await services.userServices.getUserById(id).lean();
             done(null, user);
         } catch (error) {
             done(error);
