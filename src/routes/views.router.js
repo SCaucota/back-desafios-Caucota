@@ -5,7 +5,8 @@ import CartManager from "../controllers/cartManager.js";
 import ProductModel from "../models/product.model.js";
 import passport from "passport";
 const router = Router();
-const productManager = new ProductManager;
+/* const productManager = new ProductManager; */
+import productService from "../services/index.js";
 const cartManager = new CartManager;
 
 function checkAuthenticated(req, res, next) {
@@ -76,10 +77,10 @@ router.get("/realtimeproducts", passport.authenticate("jwt", { session: false, f
     res.render("realtimeproducts");
 });
 
-router.get("/products/:id", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
-    const productId = req.params.id;
+router.get("/products/:pid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
+    const productId = req.params.pid;
     try{
-        const product = await productManager.getProductById(productId);
+        const product = await productService.getProductById(productId);
 
         if(!product){
             return res.status(404).send("Producto no encontrado");
