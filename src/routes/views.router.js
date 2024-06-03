@@ -1,13 +1,10 @@
 import express from "express";
 import { Router } from "express";
-import ProductManager from "../controllers/productManager.js";
 import CartManager from "../controllers/cartManager.js";
 import ProductModel from "../models/product.model.js";
 import passport from "passport";
 const router = Router();
-/* const productManager = new ProductManager; */
 import services from "../services/index.js";
-const cartManager = new CartManager;
 
 function checkAuthenticated(req, res, next) {
     passport.authenticate('jwt', { session: false }, (err, user, info) => {
@@ -96,7 +93,7 @@ router.get("/products/:pid", passport.authenticate("jwt", { session: false, fail
 router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
     const cartId = req.params.cid;
     try{
-        const cart = await cartManager.getCartProducts(cartId);
+        const cart = await services.cartService.getCartProducts(cartId);
 
         if(!cart){
             return res.status(404).send("Carrito no encontrado");

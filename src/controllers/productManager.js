@@ -6,11 +6,6 @@ class ProductManager {
         try {
             const {title, description, code, price, img, status, stock, category} = req.body;
 
-            if (!title || !description || !code || !price || !img || !status || stock === undefined || !category) {
-                console.error("Todos los campos del producto son obligatorios");
-                return;
-            };
-
             const repeatedCode = await services.productService.getProductByCode(code);
 
             if (repeatedCode) {

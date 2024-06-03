@@ -1,7 +1,7 @@
 import services from "../services/index.js";
 
 class cartManager {
-    addCart = async (req, res) =>{
+    addCart = async (req, res) => {
         try {
             const newCart = await services.cartService.addCart();
             res.json(newCart);
@@ -14,23 +14,15 @@ class cartManager {
         try {
             const productId = req.params.pid;
             const cartId = req.params.cid;
-            const quantity = 0;
+            const quantity = req.body.quantity || 1;
 
-            const cart = await services.cartService.addProductToCart(productId, cartId, quantity);
+            const cart = await services.cartService.addProductToCart(cartId, productId, quantity);
 
             if (!cart) {
-                console.error(`El producto con ID "${cartId}" no existe.`);
-                return;
-            };
-
-            const product = await services.productService.getProductById(productId);
-
-            if (!product) {
-                console.error(`El producto con ID "${productId}" no existe.`);
-                return;
+                return res.status(404).send({ error: `Carrito con ID "${cartId}" no encontrado` });
             }
 
-            res.status(200).send({ message: "Producto agregado correctamente" });
+            res.status(200).send({ message: "Producto agregado correctamente"});
         } catch (error) {
             res.status(500).send({ error: "Error al agregar el producto" });
         }
@@ -43,7 +35,7 @@ class cartManager {
             const cart = await services.cartService.getCartProducts(id);
 
             if (!cart) {
-                console.error(`El carrito con ID "${cartId}" no existe.`);
+                console.error(`El carrito con ID "${id}" no existe.`);
                 return;
             }
 
@@ -63,7 +55,7 @@ class cartManager {
             if (!cart) {
                 return res.status(404).send({ error: "Carrito no encontrado" });
             };
-            
+
             res.json(cart);
         } catch (error) {
             res.status(500).send({ error: "Error al actualizar los productos del carrito" });
@@ -73,7 +65,7 @@ class cartManager {
     updateAProductInCart = async (req, res) => {
         try {
             const cartId = req.params.cid;
-            const productId= req.params.pid;
+            const productId = req.params.pid;
             const quantity = 0;
 
             const cart = await services.cartService.updateAProductInCart(cartId, productId, quantity);
@@ -84,10 +76,10 @@ class cartManager {
             };
 
             res.json(cart);
-        }catch (error) {
+        } catch (error) {
             res.status(500).send({ error: "Error al cambiar la cantidad del producto" });
         }
-        
+
     }
 
     deleteProductFromCart = async (req, res) => {

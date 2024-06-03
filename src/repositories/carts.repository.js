@@ -19,15 +19,12 @@ class CartRepository {
             const product = await ProductModel.findById(productId);
             if (!product) throw new Error(`Producto con ID "${productId}" no encontrado`);
 
-            const existingProduct = cart.products.find(prod => prod.product._id.toString() === productId);
+            const existingProductIndex = cart.products.findIndex(prod => prod.product.toString() === productId.toString());
 
-            if (existingProduct) {
-                existingProduct.quantity += quantity;
+            if (existingProductIndex !== -1) {
+                cart.products[existingProductIndex].quantity += quantity;
             } else {
-                cart.products.push({
-                    product: product,
-                    quantity: quantity
-                });
+                cart.products.push({ product: productId, quantity });
             }
 
             cart.markModified("products");
@@ -48,7 +45,7 @@ class CartRepository {
         }
     }
 
-    async updateProductsInCart(id, updatedProducts){
+    async updateProductsInCart(id, updatedProducts) {
         try {
             const cart = await CartModel.findById(id);
             if (!cart) throw new Error(`Carrito con ID "${id}" no encontrado`);
@@ -70,7 +67,7 @@ class CartRepository {
     async updateAProductInCart(cartId, productId, quantity) {
         try {
             const cart = await CartModel.findById(cartId);
-            if(!cart) throw new Error(`Producto con ID "${productId}" no encontrado en el carrito`);
+            if (!cart) throw new Error(`Producto con ID "${productId}" no encontrado en el carrito`);
 
             const productInCart = cart.products.find(prod => prod.product._id.toString() === productId);
             if (!productInCart) throw new Error(`Producto con ID "${productId}" no encontrado en el carrito`);

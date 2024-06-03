@@ -2,8 +2,9 @@ import passport from "passport";
 import UserModel from "../models/user.model.js";
 import GitHubStrategy from "passport-github2";
 import jwt from "passport-jwt";
-import CartManager from "../controllers/cartManager.js";
-const cartManager = new CartManager();
+/* import CartManager from "../controllers/cartManager.js";
+const cartManager = new CartManager(); */
+import services from "../services/index.js";
 
 
 const JWTStrategy = jwt.Strategy;
@@ -43,7 +44,7 @@ const initializePassport = () => {
         try {
             let user = await UserModel.findOne({email: profile._json.email}).lean();
 
-            const newCartId = await cartManager.addCart();
+            const newCartId = await services.cartService.addCart();
 
             if(!user) {
                 let newUser = {
