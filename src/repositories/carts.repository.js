@@ -19,10 +19,10 @@ class CartRepository {
             const product = await ProductModel.findById(productId);
             if (!product) throw new Error(`Producto con ID "${productId}" no encontrado`);
 
-            const existingProductIndex = cart.products.findIndex(prod => prod.product.toString() === productId.toString());
+            const existingProduct = cart.products.find(prod => prod.product.id === productId);
 
-            if (existingProductIndex !== -1) {
-                cart.products[existingProductIndex].quantity += quantity;
+            if (existingProduct) {
+                existingProduct.quantity += quantity;
             } else {
                 cart.products.push({ product: productId, quantity });
             }
@@ -69,14 +69,10 @@ class CartRepository {
             const cart = await CartModel.findById(cartId);
             if (!cart) throw new Error(`Producto con ID "${productId}" no encontrado en el carrito`);
 
-            const productInCart = cart.products.find(prod => prod.product._id.toString() === productId);
+            const productInCart = cart.products.find(prod => prod.product.id.toString() === productId);
             if (!productInCart) throw new Error(`Producto con ID "${productId}" no encontrado en el carrito`);
 
-            if (productInCart) {
-                productInCart.quantity = newQuantity;
-            } else {
-                console.error(`El producto de ID "${productId}" no se encuentra en el carrito`);
-            }
+            productInCart.quantity = quantity;
 
             cart.markModified("products");
 

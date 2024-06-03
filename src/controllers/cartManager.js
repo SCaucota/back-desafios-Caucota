@@ -48,7 +48,7 @@ class cartManager {
     updateProductsInCart = async (req, res) => {
         try {
             const id = req.params.cid;
-            const updatedProducts = req.body.products;
+            const updatedProducts = req.body;
 
             const cart = await services.cartService.updateProductsInCart(id, updatedProducts);
 
@@ -66,8 +66,8 @@ class cartManager {
         try {
             const cartId = req.params.cid;
             const productId = req.params.pid;
-            const quantity = 0;
-
+            const quantity = req.body;
+            
             const cart = await services.cartService.updateAProductInCart(cartId, productId, quantity);
 
             if (!cart) {
