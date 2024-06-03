@@ -2,8 +2,6 @@ import passport from "passport";
 import UserModel from "../models/user.model.js";
 import GitHubStrategy from "passport-github2";
 import jwt from "passport-jwt";
-/* import CartManager from "../controllers/cartManager.js";
-const cartManager = new CartManager(); */
 import services from "../services/index.js";
 
 

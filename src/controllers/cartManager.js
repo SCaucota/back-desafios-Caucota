@@ -4,7 +4,7 @@ class cartManager {
     addCart = async (req, res) => {
         try {
             const newCart = await services.cartService.addCart();
-            res.json(newCart);
+            res.status(200).send({ message: "Carrito creado con éxito" });
         } catch (error) {
             res.status(500).send({ error: "Error al agregar un nuevo carrito" });
         }
@@ -66,7 +66,7 @@ class cartManager {
         try {
             const cartId = req.params.cid;
             const productId = req.params.pid;
-            const quantity = req.body;
+            const quantity = req.body.quantity;
             
             const cart = await services.cartService.updateAProductInCart(cartId, productId, quantity);
 
@@ -75,7 +75,7 @@ class cartManager {
                 return null;
             };
 
-            res.json(cart);
+            res.status(200).send({ message: "Producto actualizado exitosamente" });
         } catch (error) {
             res.status(500).send({ error: "Error al cambiar la cantidad del producto" });
         }
@@ -94,7 +94,7 @@ class cartManager {
                 return null;
             }
 
-            res.json(cart);
+            res.status(200).send({ message: "Producto eliminado exitosamente" });
         } catch (error) {
             res.status(500).send({ error: "Error al eliminar el producto del carrito" });
         }
@@ -111,7 +111,7 @@ class cartManager {
                 return null;
             }
 
-            res.status(200).json({ messsage: "Carrito eliminado exitosamente" });
+            res.status(200).json({ messsage: "Carrito vaciado exitosamente" });
         } catch (error) {
             res.status(500).send({ error: "Error al eliminar los productos del carrito" });
         }

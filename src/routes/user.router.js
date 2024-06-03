@@ -2,10 +2,8 @@ import express from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/user.model.js";
-import CartManager from "../controllers/cartManager.js";
 const router = express.Router();
 import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
-const cartManager = new CartManager();
 import services from "../services/index.js";
 
 router.post("/register", async (req, res) => {

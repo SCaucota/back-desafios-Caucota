@@ -1,6 +1,5 @@
 import express from "express";
 import { Router } from "express";
-import CartManager from "../controllers/cartManager.js";
 import ProductModel from "../models/product.model.js";
 import passport from "passport";
 const router = Router();

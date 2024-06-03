@@ -88,7 +88,7 @@ class CartRepository {
             if (!cart) throw new Error(`Carrito con ID "${cartId}" no encontrado`);
 
             const updatedProducts = cart.products.filter(
-                (product) => product.product._id.toString() !== productId
+                (product) => product.product.id.toString() !== productId
             );
 
             cart.products = updatedProducts;
