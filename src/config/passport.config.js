@@ -22,7 +22,7 @@ const initializePassport = () => {
         secretOrKey: configObject.JWT_SECRET
     }, async (jwt_payload, done) => {
         try {
-            const user = await services.userServices.getUserByEmail(jwt_payload.email).lean();
+            const user = await services.userService.getUserByEmail(jwt_payload.email);
             if (user) {
                 return done(null, user);
             } else {
@@ -40,7 +40,7 @@ const initializePassport = () => {
     }, async (accessToken, refreshToken, profile, done) => {
 
         try {
-            let user = await services.userServices.getUserByEmail(profile._json.email).lean();
+            let user = await services.userService.getUserByEmail(profile._json.email);
 
             const newCartId = await services.cartService.addCart();
 
@@ -54,7 +54,7 @@ const initializePassport = () => {
                     cart: newCartId
                 };
 
-                let result = await services.userServices.createUser(newUser);
+                let result = await services.userService.createUser(newUser);
                 done(null, result);
             }else {
                 done(null, user);
@@ -70,7 +70,7 @@ const initializePassport = () => {
 
     passport.deserializeUser(async (id, done) => {
         try {
-            const user = await services.userServices.getUserById(id).lean();
+            const user = await services.userService.getUserById(id).lean();
             done(null, user);
         } catch (error) {
             done(error);

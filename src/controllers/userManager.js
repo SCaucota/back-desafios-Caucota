@@ -9,7 +9,7 @@ class UserManager {
         try {
             const { first_name, last_name, email, age, role } = req.body;
 
-            const existedUser = await services.userServices.getUserByEmail(email);
+            const existedUser = await services.userService.getUserByEmail(email).lean();
 
             if (existedUser) {
                 return res.status(400).send("El usuario ya existe");
@@ -19,7 +19,7 @@ class UserManager {
 
             const newUser = { first_name, last_name, email, age, password: createHash(req.body.password), cart: newCartId, role };
 
-            await services.userServices.createUser(newUser);
+            await services.userService.createUser(newUser);
 
             const token = jwt.sign({ email: newUser.email, first_name: newUser.first_name, last_name: newUser.last_name, age: newUser.age, cart: newUser.cart, role: newUser.role }, configObject.JWT_SECRET, { expiresIn: "1h" });
 
@@ -42,7 +42,7 @@ class UserManager {
 
             const { email, password } = req.body;
 
-            const user = await services.userServices.getUserByEmail(email);
+            const user = await services.userService.getUserByEmail(email);
 
             if (!user) {
                 return res.status(400).send("El usuario no existe");

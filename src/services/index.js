@@ -3,10 +3,10 @@ import CartRepository from "../repositories/carts.repository.js";
 import UserRepository from "../repositories/users.repository.js";
 const productService = new ProductRepository();
 const cartService = new CartRepository();
-const userRepository = new UserRepository();
+const userService = new UserRepository();
 
 export default {
     productService: productService,
     cartService: cartService,
-    userRepository: userRepository
+    userService: userService
 }

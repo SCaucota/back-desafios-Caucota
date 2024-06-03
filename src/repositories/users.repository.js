@@ -12,7 +12,7 @@ class UserRepository {
 
     async getUserByEmail(email) {
         try {
-            return await UserModel.findOne({ email }).lean();
+            return await UserModel.findOne({email}).lean();
         } catch (error) {
             throw new Error("Error al buscar el usuario por el email", error);
         }

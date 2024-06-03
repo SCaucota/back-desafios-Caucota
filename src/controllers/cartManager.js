@@ -3,7 +3,7 @@ import services from "../services/index.js";
 class cartManager {
     addCart = async (req, res) => {
         try {
-            const newCart = await services.cartService.addCart();
+            await services.cartService.addCart();
             res.status(200).send({ message: "Carrito creado con éxito" });
         } catch (error) {
             res.status(500).send({ error: "Error al agregar un nuevo carrito" });
