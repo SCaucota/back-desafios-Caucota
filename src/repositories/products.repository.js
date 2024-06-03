@@ -21,9 +21,6 @@ class ProductRepository {
     async getProductById(id) {
         try {
             const product = await ProductModel.findById(id).lean();
-            if(!product) {
-                throw new Error("El producto no existe");
-            }
             return product;
         } catch (error) {
             throw new Error("Error al obtener el producto requerido", error);
@@ -41,9 +38,6 @@ class ProductRepository {
     async updateProduct(id, fields) {
         try {
             const updatedProduct = await ProductModel.findByIdAndUpdate(id, fields, {new: true}).lean();
-            if(!updatedProduct) {
-                throw new Error(`El producto de id "${id}" no existe`);
-            }
             return updatedProduct;
         } catch (error) {
             throw new Error("Error al actualizar el producto", error);
