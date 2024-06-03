@@ -1,4 +1,4 @@
-import productService from "../services/index.js";
+import services from "../services/index.js";
 
 class ProductManager {
 
@@ -11,14 +11,14 @@ class ProductManager {
                 return;
             };
 
-            const repeatedCode = await productService.getProductByCode(code);
+            const repeatedCode = await services.productService.getProductByCode(code);
 
             if (repeatedCode) {
                 console.error(`El código (code) del producto ${title} ya está en uso`);
                 return;
             };
-
-            const newProduct = await productService.addProduct({ title, description, code, price, img, status, stock, category});
+            
+            const newProduct = await services.productService.addProduct({ title, description, code, price, img, status, stock, category});
 
             res.json(newProduct);
         } catch (error) {
@@ -28,7 +28,7 @@ class ProductManager {
 
     getProducts = async (req, res) => {
         try {
-            const products = await productService.getProducts();
+            const products = await services.productService.getProducts();
             let limit = parseInt(req.query.limit);
 
             if (products.length === 0) {
@@ -37,7 +37,7 @@ class ProductManager {
                 let selectedProduct = products.slice(0, limit);
                 res.send(selectedProduct);
             }else{
-                return products;
+                res.send(products);
             }
         } catch (error) {
             res.status(500).json({ error: "Error al obtener los productos" });
@@ -47,20 +47,14 @@ class ProductManager {
     getProductById = async (req, res) => {
         try {
             const id = req.params.pid;
-
-            if (!id) {
-                console.error(`El ID del producto es obligatorio ${id}`);
-                return res.status(400).json({ error: "El ID del producto es obligatorio" });
-            }
-
-            const product = await productService.getProductById(id);
+            const product = await services.productService.getProductById(id);
 
             if (!product) {
                 console.error(`El producto de id "${id}" no existe`);
                 return null;
             }
 
-            return product;
+            res.send(product);
         } catch (error) {
             res.status(500).json({ error: "Error al obtener el producto" });
         }
@@ -68,22 +62,17 @@ class ProductManager {
 
     updateProduct = async (req, res) => {
         try {
-            const updateProduct = await productService.updateProduct(req.params._id, req.body);
             const fields = req.body;
+            const id = req.params.pid;
+            const updateProduct = await services.productService.updateProduct(id, fields);
+            
 
             if (updateProduct === -1) {
-                console.error(`El producto de id "${updateProduct._id}" no existe`);
+                console.error(`El producto de id "${id}" no existe`);
                 return;
             }
 
-            for (const field in fields) {
-                if (field !== "id" && fields[field] !== undefined) {
-                    products[productIndex][field] = fields[field];
-                }
-            };
-            
-            console.log(`Producto con ID "${updateProduct._id}" actualizado correctamente`);
-            return updateProduct;
+            res.status(200).json({ message: "El producto se actualizo correctamente" });
         } catch (error) {
             res.status(500).json({ error: "Error al actualizar el producto" });
         }
@@ -91,14 +80,15 @@ class ProductManager {
 
     deleteProduct = async (req, res) => {
         try {
-            const deleteProduct = await productService.deleteProduct(req.params._id);
+            const id = req.params.pid
+            const deleteProduct = await services.productService.deleteProduct(id);
 
             if (!deleteProduct) {
-                console.log(`El producto de id "${deleteProduct._id}" no existe`);
+                console.log(`El producto de id "${id}" no existe`);
                 return null;
             }
 
-            console.log("Producto eliminado")
+            res.status(200).json({ message: "El producto se elimino correctamente" });
         }catch (error) {
             res.status(500).json({ error: "Error al intentar eliminar el producto" });
         }

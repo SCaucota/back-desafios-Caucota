@@ -1,14 +1,12 @@
-import CartModel from "../models/cart.model.js";
-import ProductModel from "../models/product.model.js";
+import services from "../services/index.js";
 
 class cartManager {
     async addCart() {
         try {
-            const newCart = new CartModel({ products: [] });
-            await newCart.save();
-            return newCart._id;
+            const newCart = await services.cartService.addCart();
+            res.json(newCart);
         } catch (error) {
-            console.log("Error al agregar el nuevo carrito:", error);
+            res.status(500).json({ error: "Error al agregar el nuevo carrito" });
         }
     }
 

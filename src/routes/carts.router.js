@@ -24,17 +24,7 @@ router.get("/carts/:cid", async (req, res) => {
     }
 });
 
-router.post("/carts", async (req, res) => {
-    try {
-
-        await cartManager.addCart();
-
-        res.status(200).send({ message: "Carrito creado correctamente" });
-    } catch (error) {
-        console.error("Error al crear el carrito:", error);
-        res.status(500).send({ error: "Error interno del servidor" });
-    }
-});
+router.post("/carts", cartManager.addCart);
 
 router.post("/carts/:cid/product/:pid", async (req, res) => {
     try {

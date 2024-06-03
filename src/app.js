@@ -8,7 +8,7 @@ import cartsRouter from "./routes/carts.router.js";
 import sessionsRouter from "./routes/sessions.router.js";
 import userRouter from "./routes/user.router.js";
 
-import ProductManager from "./controllers/productManager.js";
+import services from "./services/index.js";
 import MessageModel from "./models/message.model.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -42,23 +42,22 @@ const httpServer = app.listen(PUERTO, () => {
 });
 
 const io = new Server(httpServer);
-const productManager = new ProductManager;
 
 io.on("connection", async (socket) => {
     console.log("Un cliente se conecto");
 
-    socket.emit("products", await productManager.getProducts());
+    socket.emit("products", await services.productService.getProducts());
 
     socket.on("deleteProduct", async (id) => {
-        await productManager.deleteProduct(id);
+        await services.productService.deleteProduct(id);
 
-        socket.emit("products", await productManager.getProducts());
+        socket.emit("products", await services.productService.getProducts());
     });
 
     socket.on("addProduct", async (product) => {
         const {title, description, code, price, img, status, stock, category} = product;
-        await productManager.addProduct(title, description, code, price, img, status, stock, category);
-        socket.emit("products", await productManager.getProducts());
+        await services.productService.addProduct({title, description, code, price, img, status, stock, category});
+        socket.emit("products", await services.productService.getProducts());
     })
 
     socket.on("message", async data => {

@@ -6,6 +6,7 @@ import CartManager from "../controllers/cartManager.js";
 const router = express.Router();
 import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
 const cartManager = new CartManager();
+import services from "../services/index.js";
 
 router.post("/register", async (req, res) => {
     const {first_name, last_name, email, age, role} = req.body;
@@ -17,7 +18,7 @@ router.post("/register", async (req, res) => {
             return res.status(400).send("El usuario ya existe");
         }
 
-        const newCartId = await cartManager.addCart();
+        const newCartId = await services.cartService.addCart();
 
         const newUser = new UserModel({
             first_name,
