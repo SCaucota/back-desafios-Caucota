@@ -9,7 +9,7 @@ class UserManager {
         try {
             const { first_name, last_name, email, age, role } = req.body;
 
-            const existedUser = await services.userService.getUserByEmail(email).lean();
+            const existedUser = await services.userService.getUserByEmail(email);
 
             if (existedUser) {
                 return res.status(400).send("El usuario ya existe");
@@ -41,6 +41,20 @@ class UserManager {
             }
 
             const { email, password } = req.body;
+
+            if (email === configObject.ADMIN_EMAIL && password === configObject.ADMIN_PASSWORD) {
+                const token = jwt.sign({
+                    email: configObject.ADMIN_EMAIL,
+                    role: 'admin'
+                }, configObject.JWT_SECRET, { expiresIn: '1h' });
+
+                res.cookie("coderCookieToken", token, {
+                    maxAge: 3600000,
+                    httpOnly: true
+                });
+
+                return res.redirect("/admin");
+            }
 
             const user = await services.userService.getUserByEmail(email);
 
