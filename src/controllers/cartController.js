@@ -134,7 +134,11 @@ class cartController {
             }
         })
 
-        const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN);
+        const TWILIO_ACCOUNT_SID = "AC68f461b832daa9ac56da4e89fad1f79a";
+        const TWILIO_AUTH_TOKEN = "45c8ff52943ee8f7b95307cb708f0267";
+        const TWILIO_SMS_NUMBER = "+12166267675"
+
+        const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
         try {
             const cartId = req.params.cid;
@@ -193,7 +197,7 @@ class cartController {
                 await transporter.sendMail(mailOptions);
                 await client.messages.create({
                     body: `Su compra se realizó exitosamente: ${ticket._id} ¡Muchas gracias por tu compra!`,
-                    from: configObject.TWILIO_SMS_NUMBER,
+                    from: TWILIO_SMS_NUMBER,
                     to: "+543517887437"
                 })
 
