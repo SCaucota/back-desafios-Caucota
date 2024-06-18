@@ -1,5 +1,6 @@
 import services from "../services/index.js";
 import nodemailer from "nodemailer";
+import twilio from "twilio";
 import configObject from "../config/config.js";
 class cartController {
     addCart = async (req, res) => {
@@ -133,6 +134,8 @@ class cartController {
             }
         })
 
+        const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN);
+
         try {
             const cartId = req.params.cid;
             const { cart, productsSinStock } = await services.cartService.purchaseCart(cartId);
@@ -188,6 +191,11 @@ class cartController {
                 }
 
                 await transporter.sendMail(mailOptions);
+                await client.messages.create({
+                    body: `Su compra se realizó exitosamente: ${ticket._id} ¡Muchas gracias por tu compra!`,
+                    from: configObject.TWILIO_SMS_NUMBER,
+                    to: "+543517887437"
+                })
 
                 res.render("checkout", {isEmpty: false, ticketId: ticket._id, unprocessedProducts: unprocessedProducts, cartId: cart._id});
             } else {
@@ -195,6 +203,7 @@ class cartController {
                 await cart.save();
                 res.render("checkout", {isEmpty: true});
             }
+
         } catch (error) {
             res.status(500).send({ error: `Error al realizar la compra del carrito Controller: ${error.message}` });
         }
