@@ -1,6 +1,13 @@
-<h2>Checkout</h2>
+{{#if isEmpty}}
+    <h2>¡Ups!</h2>
+    <p>No hay stock para ninguno de los libros agregados al carrito</p>
+    <p>Ingresa menos cantidad de libros</p>
+    <a href="/products">Volver a products</a>
+{{else}}
+    <h2>Checkout</h2>
 
-<p>Tu compra se realizó exitosamente</p>
-<p>El número de compra es <strong>{{ticketId}}</strong></p>
+    <p>Tu compra se realizó exitosamente</p>
+    <p>El número de compra es <strong>{{ticketId}}</strong></p>
 
-<a href="/products">Volver a la página de productos</a>
+    <a href="/products">Volver a la página de productos</a>
+{{/if}}

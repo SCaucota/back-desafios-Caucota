@@ -122,14 +122,8 @@ class cartController {
             const cartId = req.params.cid;
             const { cart, productsSinStock } = await services.cartService.purchaseCart(cartId);
 
-            if (productsSinStock.length === 0) {
+            if (cart.products.length !== 0) {
                 const userEmail = req.user.email;
-                const amount = cart.products.reduce((total, productItem) => {
-                    if (productItem.product.price) {
-                        return total + (productItem.quantity * productItem.product.price);
-                    }
-                    return total;
-                }, 0);
 
                 function generateCode(length, chars) {
                     let code = [];
@@ -140,6 +134,14 @@ class cartController {
                     return code.join('');
                 }
 
+                const amount = cart.products.reduce((total, productItem) => {
+                    if (productItem.product.price) {
+                        return total + (productItem.quantity * productItem.product.price);
+                    }
+                    return total;
+                }, 0);
+
+                
                 const ticketCode = generateCode(10, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
                 const ticketData = {
                     code: ticketCode,
@@ -147,11 +149,16 @@ class cartController {
                     amount,
                     purchaser: userEmail
                 };
-                await services.ticketService.generateTicket(ticketData);
+                const ticket = await services.ticketService.generateTicket(ticketData);
 
-                res.status(200).json({ message: "La compra del carrito fue exitosa" });
+                cart.products = productsSinStock;
+                await cart.save();
+
+                res.render("checkout", {isEmpty: false, ticketId: ticket._id})
             } else {
-                res.status(200).json({ productsSinStock: productsSinStock.map(item => item.product.id) });
+                cart.products = productsSinStock;
+                await cart.save();
+                res.render("checkout", {isEmpty: true});
             }
         } catch (error) {
             res.status(500).send({ error: `Error al realizar la compra del carrito Controller: ${error.message}` });

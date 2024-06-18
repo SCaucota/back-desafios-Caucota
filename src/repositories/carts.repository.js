@@ -130,7 +130,7 @@ class CartRepository {
                 }
             }
 
-            cart.products = cart.products.filter(productItem => productsSinStock.includes(productItem));
+            cart.products = cart.products.filter(productItem => !productsSinStock.includes(productItem));
             await cart.save();
 
             return { cart, productsSinStock };
