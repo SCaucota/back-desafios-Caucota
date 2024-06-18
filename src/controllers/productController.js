@@ -1,6 +1,6 @@
 import services from "../services/index.js";
 
-class ProductManager {
+class ProductController {
 
     addProduct = async (req, res) => {
         try {
@@ -91,4 +91,4 @@ class ProductManager {
     }
 }
 
-export default ProductManager;
+export default ProductController;

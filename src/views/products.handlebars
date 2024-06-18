@@ -1,17 +1,14 @@
-{{#if user.isAdmin}}
-    <h1>¡Bienvenido/a, administrador/a {{ user.first_name }}  {{ user.last_name }}!</h1>
-{{else}}
-    {{#if user.first_name}}
-        <h1>¡Bienvenido/a, {{ user.first_name }}!</h2>
-    {{/if}}
-{{/if}}
+<h1>¡Bienvenido/a, {{ user.first_name }}!</h2>
 
-<h3>Nuestros libros: </h3>
+<div>
+    <h3>Nuestros libros: </h3>
+    <a href="/carts/{{user.cart._id}}" class="btn btn-primary">Carrito</a>
+</div>
+
 
 <div id="homeList">
     {{>card}}
 </div>
-
 
 {{#if hasPrevPage}}
     <a href="{{prevLink}}">Anterior</a>

@@ -3,7 +3,7 @@ import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
 import configObject from "../config/config.js";
 import services from "../services/index.js";
 
-class UserManager {
+class UserController {
 
     register = async (req, res) => {
         try {
@@ -52,8 +52,6 @@ class UserManager {
                     maxAge: 3600000,
                     httpOnly: true
                 });
-
-                return res.redirect("/admin");
             }
 
             const user = await services.userService.getUserByEmail(email);
@@ -117,4 +115,4 @@ class UserManager {
     }
 }
 
-export default UserManager;
+export default UserController;

@@ -17,12 +17,21 @@ function checkAuthenticated(req, res, next) {
     })(req, res, next);
 }
 
+function verifyRol (roles) {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(401).send("No autorizado");
+        }
+
+        next();
+    }
+}
 
 router.get("/", checkAuthenticated, (req,res) => {
     res.render("login");
 });
 
-router.get("/products", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
+router.get("/products", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),async (req, res) => {
     try{
 
         const page = parseInt(req.query.page) || 1;
@@ -65,16 +74,17 @@ router.get("/products", passport.authenticate("jwt", { session: false, failureRe
     }
 });
 
-router.get("/chat", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
+router.get("/chat", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),(req, res) => {
     res.render("chat");
 })
 
-router.get("/realtimeproducts", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
+router.get("/realtimeproducts", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["admin"]),(req, res) => {
     res.render("realtimeproducts");
 });
 
-router.get("/products/:pid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
+router.get("/products/:pid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]), async (req, res) => {
     const productId = req.params.pid;
+    const cartId = req.user.cart._id;
     try{
         const product = await services.productService.getProductById(productId);
 
@@ -82,14 +92,14 @@ router.get("/products/:pid", passport.authenticate("jwt", { session: false, fail
             return res.status(404).send("Producto no encontrado");
         }
 
-        res.render('product', { product });
+        res.render('product', { product: product, cartId: cartId });
     }catch (error){
         console.error("Error al obtener el producto", error);
         res.status(500).send("Error interno del servidor");
     }
 });
 
-router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), async (req, res) => {
+router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),async (req, res) => {
     const cartId = req.params.cid;
     try{
         const cart = await services.cartService.getCartProducts(cartId);
@@ -98,13 +108,29 @@ router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failure
             return res.status(404).send("Carrito no encontrado");
         }
 
-        res.render("cart", {cart});
+        res.render("cart", {cart: cart, cartId: cartId});
 
     }catch (error){
         console.error("Error al obtener el carrito", error);
         res.status(500).send("Error interno del servidor")
     }
 });
+
+router.get("/carts/:cid/purchase", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),async (req, res) => {
+    const cartId = req.params.cid;
+    try{
+        const cart = await services.cartService.getCartProducts(cartId);
+
+        if(!cart){
+            return res.status(404).send("Carrito no encontrado");
+        }
+
+        res.render("checkout");
+    }
+    catch (error) {
+        res.status(500).send("Error interno del servidor");
+    }
+})
 
 router.get("/login", checkAuthenticated, (req, res) => {
     res.render("login");
@@ -116,11 +142,6 @@ router.get("/register", checkAuthenticated, async (req, res) => {
 
 router.get("/profile", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
     res.render("profile", {user: req.user});
-})
-
-router.get("/admin", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
-    const isAdmin = req.user.role === "admin";
-    res.render("admin", {isAdmin});
 })
 
 export default router;

@@ -1,7 +1,8 @@
 {{#if cart}}
   {{#each cart}}
     <div class="product">
-      <h1>{{ product.title }}</h1>
+      <h1>Carrito</h1>
+      <h2>{{ product.title }}</h2>
       <p><strong>Description:</strong> {{ product.description }}</p>
       <p><strong>Price:</strong> {{ product.price }}</p>
       <p><strong>Image:</strong> {{ product.img }}</p>
@@ -14,5 +15,9 @@
 {{else}}
   <p>No hay productos en el carrito.</p>
 {{/if}}
+
+<form action="/api/carts/{{cartId}}/purchase" method="post">
+  <button type="submit" class="btn btn-primary">Comprar</button>
+</form>
 
 <a href="/products">Volver a la página de productos</a>
