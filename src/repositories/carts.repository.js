@@ -11,7 +11,7 @@ class CartRepository {
         }
     }
 
-    async addProductToCart(cartId, productId, quantity = 1) {
+    async addProductToCart(cartId, productId, quantity) {
         try {
             const cart = await CartModel.findById(cartId);
             if (!cart) throw new Error(`Carrito con ID "${cartId}" no encontrado`);
@@ -22,7 +22,7 @@ class CartRepository {
             const existingProduct = cart.products.find(prod => prod.product.id === productId);
 
             if (existingProduct) {
-                existingProduct.quantity += quantity;
+                existingProduct.quantity = quantity;
             } else {
                 cart.products.push({ product: productId, quantity });
             }

@@ -6,6 +6,8 @@
 <p><strong>Stock:</strong> {{ product.stock }}</p>
 <p><strong>Category:</strong> {{ product.category }}</p>
 <form action="/api/carts/{{cartId}}/product/{{product._id}}" method="post">
+  <label for="quantity">Cantidad:</label>
+  <input type="number" id="quantity" name="quantity" min="1" value={{quantity}} required>
   <button type="submit" class="btn btn-primary">Agregar al carrito</button>
 </form>
 <a href="/products">Back to Products</a>

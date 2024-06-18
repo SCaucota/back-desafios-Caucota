@@ -92,7 +92,11 @@ router.get("/products/:pid", passport.authenticate("jwt", { session: false, fail
             return res.status(404).send("Producto no encontrado");
         }
 
-        res.render('product', { product: product, cartId: cartId });
+        const cart = req.user.cart
+
+        const quantity = cart.products.find(product => product.product.toString() === productId)?.quantity || 0;
+
+        res.render('product', { product: product, cartId: cartId, quantity: quantity });
     }catch (error){
         console.error("Error al obtener el producto", error);
         res.status(500).send("Error interno del servidor");

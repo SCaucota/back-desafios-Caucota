@@ -1,7 +1,8 @@
+<h1>Carrito</h1>
+
 {{#if cart}}
   {{#each cart}}
     <div class="product">
-      <h1>Carrito</h1>
       <h2>{{ product.title }}</h2>
       <p><strong>Description:</strong> {{ product.description }}</p>
       <p><strong>Price:</strong> {{ product.price }}</p>
@@ -10,14 +11,21 @@
       <p><strong>Stock:</strong> {{ product.stock }}</p>
       <p><strong>Category:</strong> {{ product.category }}</p>
       <h5><strong>Quantity:</strong>{{quantity}}</h5>
+      <button class="btn btn-danger delete-button" data-cart-id="{{../cartId}}" data-product-id="{{product._id}}" >Eliminar</button>
     </div>
   {{/each}}
+
+  <form action="/api/carts/{{cartId}}/purchase" method="post">
+    <button type="submit" class="btn btn-primary">Comprar</button>
+  </form>
+
+  <button class="btn btn-danger empty-button" data-cart-id={{cartId}}>Vaciar Carrito</button>
+
+  <script src="/js/cart.js"></script>
 {{else}}
   <p>No hay productos en el carrito.</p>
 {{/if}}
 
-<form action="/api/carts/{{cartId}}/purchase" method="post">
-  <button type="submit" class="btn btn-primary">Comprar</button>
-</form>
-
 <a href="/products">Volver a la página de productos</a>
+
+
