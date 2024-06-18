@@ -134,7 +134,7 @@ class cartController {
             }
         })
 
-        /* const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN); */
+        const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN);
 
         try {
             const cartId = req.params.cid;
