@@ -134,45 +134,20 @@ class cartController {
             }
         })
 
-        const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN);
+        /* const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN); */
 
         try {
             const cartId = req.params.cid;
-            const { cart, productsSinStock } = await services.cartService.purchaseCart(cartId);
+            const userEmail = req.user.email;
+            const result = await services.cartService.purchaseCart(cartId, userEmail);
 
-            if (cart.products.length !== 0) {
-                const userEmail = req.user.email;
+            if(result.isEmpty) {
+                res.render("checkout", {isEmpty: true})
+            }else{
+                const {ticketData, unprocessedProducts} = result;
 
-                function generateCode(length, chars) {
-                    let code = [];
-                    for (var i = 0; i < length; i++) {
-                        let index = Math.floor(Math.random() * chars.length);
-                        code.push(chars[index]);
-                    }
-                    return code.join('');
-                }
-
-                const amount = cart.products.reduce((total, productItem) => {
-                    if (productItem.product.price) {
-                        return total + (productItem.quantity * productItem.product.price);
-                    }
-                    return total;
-                }, 0);
-
-                
-                const ticketCode = generateCode(10, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-                const ticketData = {
-                    code: ticketCode,
-                    purchase_datetime: Date.now(),
-                    amount,
-                    purchaser: userEmail
-                };
                 const ticket = await services.ticketService.generateTicket(ticketData);
 
-                cart.products = productsSinStock;
-                await cart.save();
-
-                
                 const mailOptions = {
                     from: configObject.MAILING_USER,
                     to: "nutellitadivergente@gmail.com",
@@ -180,30 +155,19 @@ class cartController {
                     html: `
                         <h1>Ticket de compra: ${ticket._id}</h1>
                         <h2>Tu compra se generó exitosamente</h2>
-                        <h2>¡Muchas gracias por tu compta!</h2>
+                        <h2>¡Muchas gracias por tu compra!</h2>
                     `
                 };
-
-                let unprocessedProducts = false;
-
-                if(productsSinStock.length !== 0) {
-                    unprocessedProducts = true;
-                }
 
                 await transporter.sendMail(mailOptions);
                 await client.messages.create({
                     body: `Su compra se realizó exitosamente: ${ticket._id} ¡Muchas gracias por tu compra!`,
                     from: configObject.TWILIO_SMS_NUMBER,
                     to: "+543517887437"
-                })
+                });
 
-                res.render("checkout", {isEmpty: false, ticketId: ticket._id, unprocessedProducts: unprocessedProducts, cartId: cart._id});
-            } else {
-                cart.products = productsSinStock;
-                await cart.save();
-                res.render("checkout", {isEmpty: true});
+                res.render("checkout", { isEmpty: false, ticketId: ticket._id, unprocessedProducts, cartId });
             }
-
         } catch (error) {
             res.status(500).send({ error: `Error al realizar la compra del carrito Controller: ${error.message}` });
         }

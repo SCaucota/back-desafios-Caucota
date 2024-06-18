@@ -1,5 +1,6 @@
 import CartModel from "../models/cart.model.js";
 import ProductModel from "../models/product.model.js";
+import TicketModel from "../models/ticket.model.js";
 
 class CartRepository {
     async addCart() {
@@ -112,7 +113,7 @@ class CartRepository {
         }
     }
 
-    async purchaseCart(cartId) {
+    async purchaseCart(cartId, userEmail) {
         try {
             const cart = await CartModel.findById(cartId);
             if (!cart) throw new Error(`Carrito con ID "${cartId}" no encontrado`);
@@ -133,7 +134,50 @@ class CartRepository {
             cart.products = cart.products.filter(productItem => !productsSinStock.includes(productItem));
             await cart.save();
 
-            return { cart, productsSinStock };
+            if (cart.products.length !== 0) {
+
+                function generateCode(length, chars) {
+                    let code = [];
+                    for (var i = 0; i < length; i++) {
+                        let index = Math.floor(Math.random() * chars.length);
+                        code.push(chars[index]);
+                    }
+                    return code.join('');
+                }
+
+                const amount = cart.products.reduce((total, productItem) => {
+                    if (productItem.product.price) {
+                        return total + (productItem.quantity * productItem.product.price);
+                    }
+                    return total;
+                }, 0);
+
+                
+                const ticketCode = generateCode(10, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                const ticketData = {
+                    code: ticketCode,
+                    purchase_datetime: Date.now(),
+                    amount,
+                    purchaser: userEmail
+                };
+
+                let unprocessedProducts = false;
+
+                if(productsSinStock.length !== 0) {
+                    unprocessedProducts = true;
+                }
+
+                cart.products = productsSinStock;
+                await cart.save();
+
+                return { ticketData, unprocessedProducts };
+                
+            } else {
+                cart.products = productsSinStock;
+                await cart.save();
+                return { isEmpty: true };
+            }
+
         } catch (error) {
             throw new Error(`Error al finalizar la compra: ${error.message}`);
         }
