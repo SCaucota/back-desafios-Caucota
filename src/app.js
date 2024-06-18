@@ -41,6 +41,7 @@ const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto http//localhost:${PUERTO}`);
 });
 
+
 const io = new Server(httpServer);
 
 io.on("connection", async (socket) => {

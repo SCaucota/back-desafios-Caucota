@@ -1,5 +1,6 @@
 import services from "../services/index.js";
-
+import nodemailer from "nodemailer";
+import configObject from "../config/config.js";
 class cartController {
     addCart = async (req, res) => {
         try {
@@ -116,8 +117,22 @@ class cartController {
             res.status(500).send({ error: "Error al eliminar los productos del carrito" });
         }
     }
+    
 
     purchaseCart = async (req, res) => {
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            port: 587,
+            auth: {
+                user: configObject.MAILING_USER,
+                pass: configObject.MAILING_PASSWORD
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        })
+
         try {
             const cartId = req.params.cid;
             const { cart, productsSinStock } = await services.cartService.purchaseCart(cartId);
@@ -154,7 +169,27 @@ class cartController {
                 cart.products = productsSinStock;
                 await cart.save();
 
-                res.render("checkout", {isEmpty: false, ticketId: ticket._id})
+                
+                const mailOptions = {
+                    from: configObject.MAILING_USER,
+                    to: "nutellitadivergente@gmail.com",
+                    subject: "Ticket de compra",
+                    html: `
+                        <h1>Ticket de compra: ${ticket._id}</h1>
+                        <h2>Tu compra se generó exitosamente</h2>
+                        <h2>¡Muchas gracias por tu compta!</h2>
+                    `
+                };
+
+                let unprocessedProducts = false;
+
+                if(productsSinStock.length !== 0) {
+                    unprocessedProducts = true;
+                }
+
+                await transporter.sendMail(mailOptions);
+
+                res.render("checkout", {isEmpty: false, ticketId: ticket._id, unprocessedProducts: unprocessedProducts, cartId: cart._id});
             } else {
                 cart.products = productsSinStock;
                 await cart.save();

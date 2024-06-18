@@ -9,5 +9,10 @@
     <p>Tu compra se realizó exitosamente</p>
     <p>El número de compra es <strong>{{ticketId}}</strong></p>
 
+    {{#if unprocessedProducts}}
+        <p>Algunos libros no se procesaron en la compra por stock insuficiente</p>
+        <a class="btn btn-primary" href="/carts/{{cartId}}">Ver carrito</a>
+    {{/if}}
+
     <a href="/products">Volver a la página de productos</a>
 {{/if}}
