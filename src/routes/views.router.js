@@ -1,6 +1,7 @@
 import express from "express";
 import { Router } from "express";
 import ProductModel from "../models/product.model.js";
+import { generateProducts } from "../utils/mock.products.js";
 import passport from "passport";
 const router = Router();
 import services from "../services/index.js";
@@ -146,6 +147,14 @@ router.get("/register", checkAuthenticated, async (req, res) => {
 
 router.get("/profile", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
     res.render("profile", {user: req.user});
+})
+
+router.get("/mockingproducts", (req, res) => {
+    const products = [];
+    for (let i = 0; i < 100; i++) {
+        products.push(generateProducts());
+    };
+    res.send(products);
 })
 
 export default router;
