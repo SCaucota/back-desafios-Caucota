@@ -2,8 +2,10 @@ import services from "../services/index.js";
 import nodemailer from "nodemailer";
 import twilio from "twilio";
 import configObject from "../config/config.js";
+import CustomError from "../services/errors/customError.js";
+import { EErrors } from "../services/errors/enum.js";
 class cartController {
-    addCart = async (req, res) => {
+    addCart = async (req, res, next) => {
         try {
             await services.cartService.addCart();
             res.status(200).send({ message: "Carrito creado con éxito" });
@@ -12,7 +14,7 @@ class cartController {
         }
     }
 
-    addProductToCart = async (req, res) => {
+    addProductToCart = async (req, res, next) => {
         try {
             const productId = req.params.pid;
             const cartId = req.params.cid;

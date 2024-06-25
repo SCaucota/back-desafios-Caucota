@@ -1,23 +1,40 @@
 import services from "../services/index.js";
+import CustomError from "../services/errors/customError.js";
+import { EErrors } from "../services/errors/enum.js";
+/* import errorInfo from "../services/errors/info.js"; */
+import {generateInfoErrorProduct} from "../services/errors/info.js";
 
 class ProductController {
 
-    addProduct = async (req, res) => {
+    addProduct = async (req, res, next) => {
         try {
             const {title, description, code, price, img, status, stock, category} = req.body;
+
+            if (!title || !description || !code || !price || !img || !status || !stock || !category) {
+                throw CustomError.createError({
+                    name: "Producto nuevo",
+                    cause: generateInfoErrorProduct({title, description, code, price, img, status, stock, category}),
+                    menssage: "Error al crear el producto",
+                    code: EErrors.PROUDUCT_VALIDATION_ERROR
+                });
+            }
 
             const repeatedCode = await services.productService.getProductByCode(code);
 
             if (repeatedCode) {
-                console.error(`El código (code) del producto ${title} ya está en uso`);
-                return;
+                throw CustomError.createError({
+                    name: "Código duplicado",
+                    cause: `El código (code) del producto ${title} ya está en uso`,
+                    message: "Código de producto duplicado",
+                    code: EErrors.PRODUCT_ALREADY_EXIST
+                })
             };
             
             const newProduct = await services.productService.addProduct({ title, description, code, price, img, status, stock, category});
 
             res.json(newProduct);
         } catch (error) {
-            res.status(500).json({ error: "Error al agregar el producto" });
+            next(error);
         }
     }
 
@@ -39,19 +56,23 @@ class ProductController {
         }
     }
 
-    getProductById = async (req, res) => {
+    getProductById = async (req, res, next) => {
         try {
             const id = req.params.pid;
             const product = await services.productService.getProductById(id);
 
             if (!product) {
-                console.error(`El producto de id "${id}" no existe`);
-                return null;
+                throw CustomError.createError({
+                    name: "Producto no encontrado",
+                    cause: `El producto de id "${id}" no existe`,
+                    message: "Producto no encontrado",
+                    code: EErrors.PRODUCT_NOT_FOUND
+                })
             }
 
             res.send(product);
         } catch (error) {
-            res.status(500).json({ error: "Error al obtener el producto" });
+            next(error);
         }
     }
 

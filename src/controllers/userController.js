@@ -2,17 +2,34 @@ import jwt from "jsonwebtoken";
 import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
 import configObject from "../config/config.js";
 import services from "../services/index.js";
+import { EErrors } from "../services/errors/enum.js";
+import {generateInfoErrorUser} from "../services/errors/info.js";
+import CustomError from "../services/errors/customError.js";
 
 class UserController {
 
-    register = async (req, res) => {
+    register = async (req, res, next) => {
         try {
             const { first_name, last_name, email, age, role } = req.body;
+
+            if(!first_name || !last_name || !email || !age || !role) {
+                throw CustomError.createError({
+                    name: "Registrro Usuario",
+                    cause: generateInfoErrorUser({first_name, last_name, email, age, role}),
+                    mensagee: "Error en el registro. El usuario tiene algunos datos incompletos ",
+                    code: EErrors.USER_REGISTER_ERROR
+                })
+            }
 
             const existedUser = await services.userService.getUserByEmail(email);
 
             if (existedUser) {
-                return res.status(400).send("El usuario ya existe");
+                throw CustomError.createError({
+                    name: "Email duplicado",
+                    cause: `El email: ${email} ya está en uso`,
+                    message: "Usuario duplicado",
+                    code: EErrors.USER_ALREADY_EXIST
+                })
             }
 
             const newCartId = await services.cartService.addCart();
@@ -30,7 +47,7 @@ class UserController {
 
             res.redirect("/products");
         } catch (error) {
-            res.status(500).send("Error interno del servidor");
+            next(error)
         }
     }
 

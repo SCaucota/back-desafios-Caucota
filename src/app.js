@@ -1,6 +1,7 @@
 import express from "express";
 import exphbs from "express-handlebars";
 import { Server } from "socket.io";
+import manejadorError from "./middleware/error.js";
 
 import viewsRouter from "./routes/views.router.js";
 import productsRouter from "./routes/products.router.js";
@@ -36,6 +37,8 @@ app.use("/api", productsRouter);
 app.use("/api", cartsRouter);
 app.use("/api/sessions", sessionsRouter)
 app.use("/api", userRouter);
+
+app.use(manejadorError);
 
 const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto http//localhost:${PUERTO}`);

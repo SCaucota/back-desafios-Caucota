@@ -2,6 +2,9 @@ import CartModel from "../models/cart.model.js";
 import ProductModel from "../models/product.model.js";
 import TicketModel from "../models/ticket.model.js";
 
+import CustomError from "../services/errors/customError.js";
+import { EErrors } from "../services/errors/enum.js";
+
 class CartRepository {
     async addCart() {
         try {
@@ -32,7 +35,7 @@ class CartRepository {
 
             return await cart.save();
         } catch (error) {
-            throw new Error("Error al agregar el nuevo producto:", error);
+            throw error;
         }
     }
 
