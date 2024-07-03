@@ -157,4 +157,16 @@ router.get("/mockingproducts", (req, res) => {
     res.send(products);
 })
 
+
+router.get("/loggertest", (req, res) => {
+    req.logger.http("Mensaje HTTP");
+    req.logger.fatal("Mensaje FATAL");
+    req.logger.error("Mensaje ERROR");
+    req.logger.warning("Mensaje WARNING");
+    req.logger.info("Mensaje INFO");
+    req.logger.debug("Mensaje DEBUG");
+
+    res.send("Logs generados")
+})
+
 export default router;
