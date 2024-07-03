@@ -52,7 +52,6 @@ const loggerProduccion = winston.createLogger({
 });
 
 const logger = configObject.LOGGER === "produccion" ? loggerProduccion : loggerDesarrollo;
-console.log(`Logger configurado para: ${configObject.LOGGER}`)
 
 const addLogger = (req, res, next) => {
     req.logger = logger;
@@ -60,4 +59,4 @@ const addLogger = (req, res, next) => {
     next();
 }
 
-export default addLogger;
+export {addLogger, logger};

@@ -14,7 +14,7 @@ import MessageModel from "./models/message.model.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
-import addLogger from "./utils/logger.js";
+import {addLogger} from "./utils/logger.js";
 import "./database.js";
 const app = express();
 const PUERTO = 8080;

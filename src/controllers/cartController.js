@@ -2,8 +2,7 @@ import services from "../services/index.js";
 import nodemailer from "nodemailer";
 import twilio from "twilio";
 import configObject from "../config/config.js";
-import CustomError from "../services/errors/customError.js";
-import { EErrors } from "../services/errors/enum.js";
+
 class cartController {
     addCart = async (req, res, next) => {
         try {
@@ -39,12 +38,13 @@ class cartController {
             const cart = await services.cartService.getCartProducts(id);
 
             if (!cart) {
-                console.error(`El carrito con ID "${id}" no existe.`);
+                req.logger.error(`El carrito con ID "${id}" no existe.`);
                 return;
             }
-
+            req.logger.info(`Carrito con ID "${id}" encontrado.`);
             res.json(cart);
         } catch (error) {
+            req.logger.error("Error al obtener los productos del carrito", error);
             res.status(500).send({ error: "Error al obtener los productos del carrito" });
         }
     };
@@ -75,12 +75,14 @@ class cartController {
             const cart = await services.cartService.updateAProductInCart(cartId, productId, quantity);
 
             if (!cart) {
-                console.error(`El carrito con ID "${id}" no existe`);
+                req.logger.error(`El carrito con ID "${id}" no existe`);
                 return null;
             };
 
+            req.logger.info(`Carrito de ID "${id}" actualizado con éxito`);
             res.status(200).send({ message: "Producto actualizado exitosamente" });
         } catch (error) {
+            req.logger.error("Error al cambiar la cantidad del producto:", error);
             res.status(500).send({ error: "Error al cambiar la cantidad del producto" });
         }
 
@@ -94,12 +96,14 @@ class cartController {
             const cart = await services.cartService.deleteProductFromCart(cartId, productId);
 
             if (!cart) {
-                console.error(`El carrito con ID "${cartId}" no existe`);
+                req.logger.error(`El carrito con ID "${cartId}" no existe`);
                 return null;
             }
 
+            req.logger.info("Producto eliminado del carrito con éxito");
             res.status(200).send({ message: "Producto eliminado exitosamente" });
         } catch (error) {
+            req.logger.error("Error al eliminar el producto del carrito:", error);
             res.status(500).send({ error: "Error al eliminar el producto del carrito" });
         }
     }
@@ -111,12 +115,14 @@ class cartController {
             const cart = await services.cartService.deleteProductsCart(id);
 
             if (!cart) {
-                console.error(`El carrito con ID "${id}" no existe`);
+                req.logger.error(`El carrito con ID "${id}" no existe`);
                 return null;
             }
 
+            req.logger.info("Carrito eliminado exitosamente");
             res.render("products", { status: "success", message: "Carrito eliminado exitosamente" });
         } catch (error) {
+            req.logger.error("Error al eliminar los productos del carrito:", error);
             res.status(500).send({ error: "Error al eliminar los productos del carrito" });
         }
     }

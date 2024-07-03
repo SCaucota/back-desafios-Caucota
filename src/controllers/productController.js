@@ -1,7 +1,6 @@
 import services from "../services/index.js";
 import CustomError from "../services/errors/customError.js";
 import { EErrors } from "../services/errors/enum.js";
-/* import errorInfo from "../services/errors/info.js"; */
 import {generateInfoErrorProduct} from "../services/errors/info.js";
 
 class ProductController {
@@ -44,7 +43,7 @@ class ProductController {
             let limit = parseInt(req.query.limit);
 
             if (products.length === 0) {
-                console.log("No hay productos disponibles.");
+                req.logger.error("No hay productos disponibles.");
             } else if(limit){
                 let selectedProduct = products.slice(0, limit);
                 res.send(selectedProduct);
@@ -52,6 +51,7 @@ class ProductController {
                 res.send(products);
             }
         } catch (error) {
+            req.logger.error("Error al obtener los productos", error);
             res.status(500).json({ error: "Error al obtener los productos" });
         }
     }
@@ -84,12 +84,14 @@ class ProductController {
             
 
             if (updateProduct === -1) {
-                console.error(`El producto de id "${id}" no existe`);
+                req.logger.error(`El producto de id "${id}" no existe`);
                 return;
             }
 
+            req.logger.info(`Producto con ID "${id}" actualizado correctamente`);
             res.status(200).json({ message: "El producto se actualizo correctamente" });
         } catch (error) {
+            req.logger.error("Error al actualizar el Producto", error);
             res.status(500).json({ error: "Error al actualizar el producto" });
         }
     }
@@ -100,12 +102,14 @@ class ProductController {
             const deleteProduct = await services.productService.deleteProduct(id);
 
             if (!deleteProduct) {
-                console.log(`El producto de id "${id}" no existe`);
+                req.logger.error(`El producto de id "${id}" no existe`);
                 return null;
             }
 
+            req.logger.info(`Producto con ID "${id}" eliminado correctamente`);
             res.status(200).json({ message: "El producto se elimino correctamente" });
         }catch (error) {
+            req.logger.error("Error al actualizar el producto", error);
             res.status(500).json({ error: "Error al intentar eliminar el producto" });
         }
         

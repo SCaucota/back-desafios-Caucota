@@ -99,7 +99,7 @@ router.get("/products/:pid", passport.authenticate("jwt", { session: false, fail
 
         res.render('product', { product: product, cartId: cartId, quantity: quantity });
     }catch (error){
-        console.error("Error al obtener el producto", error);
+        req.logger.error("Error al obtener el producto", error);
         res.status(500).send("Error interno del servidor");
     }
 });
@@ -116,7 +116,7 @@ router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failure
         res.render("cart", {cart: cart, cartId: cartId});
 
     }catch (error){
-        console.error("Error al obtener el carrito", error);
+        req.logger.error("Error al obtener el carrito", error);
         res.status(500).send("Error interno del servidor")
     }
 });
@@ -158,7 +158,7 @@ router.get("/mockingproducts", (req, res) => {
 })
 
 
-router.get("/loggertest", (req, res) => {
+router.get("/loggerTest", (req, res) => {
     req.logger.http("Mensaje HTTP");
     req.logger.fatal("Mensaje FATAL");
     req.logger.error("Mensaje ERROR");
