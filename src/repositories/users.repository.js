@@ -54,6 +54,14 @@ class UserRepository {
             throw new Error("Error al actualizar el usuario" + error);
         }
     }
+
+    async changeUserRol(id, nuevoRole) {
+        try {
+            return await UserModel.findByIdAndUpdate(id, {role: nuevoRole}, {new: true}).lean()
+        } catch (error) {
+            throw new Error("Error al cambiar el rol" + error);
+        }
+    }
 }
 
 export default UserRepository;

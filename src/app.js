@@ -50,21 +50,55 @@ const httpServer = app.listen(PUERTO, () => {
 
 const io = new Server(httpServer);
 
+io.use((socket, next) => {
+    cookieParser()(socket.request, {}, () => {
+        passport.authenticate('jwt', { session: false }, (err, user, info) => {
+            if (err) return next(err);
+            if (!user) return next(new Error('Authentication error'));
+            socket.request.user = user;
+            next();
+        })(socket.request, {}, next);
+    });
+});
+
 io.on("connection", async (socket) => {
     console.log("Un cliente se conecto");
 
-    socket.emit("products", await services.productService.getProducts());
+    socket.on("getProducts", async() => {
+        try {
+            const { user } = socket.request;
+            const products = await services.productService.getProducts(user)
+            socket.emit("products", products)
+        } catch (error) {
+            console.error("Error al obtener los productos:", error);
+            socket.emit("error", "Error al obtener los productos");
+        }
+    })
+
+    /* socket.emit("products", await services.productService.getProducts()); */
 
     socket.on("deleteProduct", async (id) => {
-        await services.productService.deleteProduct(id);
-
-        socket.emit("products", await services.productService.getProducts());
+        try {
+            const { user } = socket.request;
+            await services.productService.deleteProduct(id);
+            socket.emit("products", await services.productService.getProducts(user));
+        } catch (error) {
+            console.error("Error al obtener los productos:", error);
+            socket.emit("error", "Error al obtener los productos");
+        }
     });
 
     socket.on("addProduct", async (product) => {
-        const {title, description, code, price, img, status, stock, category} = product;
-        await services.productService.addProduct({title, description, code, price, img, status, stock, category});
-        socket.emit("products", await services.productService.getProducts());
+        try {
+            const {user} = socket.request;
+            const {title, description, code, price, img, status, stock, category} = product;
+            await services.productService.addProduct({title, description, code, price, img, status, stock, category}, user);
+            socket.emit("products", await services.productService.getProducts(user));
+        } catch (error) {
+            console.error("Error al obtener los productos:", error);
+            socket.emit("error", "Error al obtener los productos");
+        }
+        
     })
 
     socket.on("message", async data => {

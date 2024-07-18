@@ -9,6 +9,9 @@ class ProductController {
         try {
             const {title, description, code, price, img, status, stock, category} = req.body;
 
+            const parsedPrice = parseFloat(price);
+            const parsedStock = parseInt(stock, 10);
+
             if (!title || !description || !code || !price || !img || !status || !stock || !category) {
                 throw CustomError.createError({
                     name: "Producto nuevo",
@@ -29,7 +32,15 @@ class ProductController {
                 })
             };
             
-            const newProduct = await services.productService.addProduct({ title, description, code, price, img, status, stock, category});
+            /* const isPremiumUser = req.user.role === "premium";
+
+            let newProduct
+
+            if (isPremiumUser) {
+                newProduct = await services.productService.addProduct({ title, description, code, price: parsedPrice, img, status, stock: parsedStock, category, owner: req.user.email });
+            } else {
+                newProduct = await services.productService.addProduct({ title, description, code, price: parsedPrice, img, status, stock: parsedStock, category});
+            } */
 
             res.json(newProduct);
         } catch (error) {
@@ -40,6 +51,7 @@ class ProductController {
     getProducts = async (req, res) => {
         try {
             const products = await services.productService.getProducts();
+            
             let limit = parseInt(req.query.limit);
 
             if (products.length === 0) {

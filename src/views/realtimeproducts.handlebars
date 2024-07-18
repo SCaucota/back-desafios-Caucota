@@ -5,19 +5,19 @@
 
 <h2>Formulario para agregar productos</h2>
 
-<form id="formAddProduct">
-    <input type="text" id="title" placeholder="Titulo">
-    <input type="text" id="description" placeholder="Descripcion">
-    <input type="number" id="price" placeholder="Precio">
-    <input type="text" id="img" value="Sin Imagen">
-    <input type="text" id="code" placeholder="Código">
-    <input type="number" id="stock" placeholder="Stock">
-    <input type="text" id="category" placeholder="Categoria">
-    <select id="status">
+<form id="formAddProduct" method="POST">
+    <input type="text" id="title" name="title" placeholder="Titulo">
+    <input type="text" id="description" name="description" placeholder="Descripcion">
+    <input type="number" id="price" name="price" placeholder="Precio">
+    <input type="text" id="img" name="img" value="Sin Imagen">
+    <input type="text" id="code" name="code" placeholder="Código">
+    <input type="number" id="stock" name="stock" placeholder="Stock">
+    <input type="text" id="category" name="category" placeholder="Categoria">
+    <select id="status" name="status">
         <option value="true"> Activo </option>
         <option value="false"> Inactivo </option>
     </select>
-    <button type="button" id="btnSend"> Enviar </button>
+    <button id="btnSend"> Enviar </button>
 </form>
 
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>

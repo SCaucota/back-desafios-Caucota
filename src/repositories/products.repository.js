@@ -1,18 +1,26 @@
 import ProductModel from "../models/product.model.js";
 
 class ProductRepository {
-    async addProduct(productsData) {
+    async addProduct(productsData, user) {
         try {
+            if(user && user.role === "premium"){
+                productsData.owner = user.email
+            }
+
             const newProduct = new ProductModel(productsData);
             return await newProduct.save();
         } catch (error) {
-            throw new Error("Error al agregar el nuevo producto", error);
+            throw new Error("Error al agregar el nuevo producto" + error);
         }
     }
 
-    async getProducts() {
+    async getProducts(user) {
         try {
-            return await ProductModel.find().lean();
+            if(user && user.role === "premium"){
+                return await ProductModel.find({owner: user.email }).lean()
+            }else{
+                return await ProductModel.find().lean();
+            }
         } catch (error) {
             throw new Error("Error al obtener los Productos", error);
         }

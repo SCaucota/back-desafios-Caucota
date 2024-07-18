@@ -32,7 +32,7 @@ router.get("/", checkAuthenticated, (req,res) => {
     res.render("login");
 });
 
-router.get("/products", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),async (req, res) => {
+router.get("/products", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]),async (req, res) => {
     try{
 
         const page = parseInt(req.query.page) || 1;
@@ -48,6 +48,8 @@ router.get("/products", passport.authenticate("jwt", { session: false, failureRe
         if(req.query.sort && (req.query.sort === "asc" || req.query.sort === "desc")) {
             sortOptions.price = req.query.sort;
         }
+
+        query.owner = { $ne: req.user.email };
 
         const books = await ProductModel.paginate(query, {limit, page, sort: sortOptions});
 
@@ -75,15 +77,15 @@ router.get("/products", passport.authenticate("jwt", { session: false, failureRe
     }
 });
 
-router.get("/chat", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),(req, res) => {
+router.get("/chat", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]),(req, res) => {
     res.render("chat");
 })
 
-router.get("/realtimeproducts", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["admin"]),(req, res) => {
+router.get("/realtimeproducts", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["admin", "premium"]),(req, res) => {
     res.render("realtimeproducts");
 });
 
-router.get("/products/:pid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]), async (req, res) => {
+router.get("/products/:pid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]), async (req, res) => {
     const productId = req.params.pid;
     const cartId = req.user.cart._id;
     try{
@@ -104,7 +106,7 @@ router.get("/products/:pid", passport.authenticate("jwt", { session: false, fail
     }
 });
 
-router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),async (req, res) => {
+router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]),async (req, res) => {
     const cartId = req.params.cid;
     try{
         const cart = await services.cartService.getCartProducts(cartId);
@@ -121,7 +123,7 @@ router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failure
     }
 });
 
-router.get("/carts/:cid/purchase", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user"]),async (req, res) => {
+router.get("/carts/:cid/purchase", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]),async (req, res) => {
     const cartId = req.params.cid;
     try{
         const cart = await services.cartService.getCartProducts(cartId);

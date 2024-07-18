@@ -2,6 +2,7 @@ import services from "../services/index.js";
 import twilio from "twilio";
 import configObject from "../config/config.js";
 import EmailManager from "../services/email.js";
+import swal from "sweetalert2";
 
 const emailManager = new EmailManager();
 
@@ -20,7 +21,7 @@ class cartController {
             const productId = req.params.pid;
             const cartId = req.params.cid;
             const quantity = req.body.quantity || 1;
-
+            
             const cart = await services.cartService.addProductToCart(cartId, productId, quantity);
 
             if (!cart) {
@@ -29,7 +30,7 @@ class cartController {
 
             res.redirect("/carts/" + cartId);
         } catch (error) {
-            res.status(500).send({ error: "Error al agregar el producto" });
+            res.status(500).send({ error: "Error al agregar el producto" } + error);
         }
     }
 

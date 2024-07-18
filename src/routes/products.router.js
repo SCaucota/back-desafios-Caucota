@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+import passport from "passport";
 import ProductController from "../controllers/productController.js";
 const productController = new ProductController();
 

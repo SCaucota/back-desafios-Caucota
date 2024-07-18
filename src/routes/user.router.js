@@ -16,6 +16,7 @@ router.get("/products", passport.authenticate("jwt", {session: false}), (req, re
 })
 router.post("/user/requestPasswordReset", userController.requestPasswordReset);
 router.post("/user/resetPassword", userController.resetPassword);
+router.put("/user/premium/:uid", userController.cambiarRolPremium)
 
 
 export default router;
