@@ -73,6 +73,8 @@ class UserController {
                     maxAge: 3600000,
                     httpOnly: true
                 });
+
+                return res.redirect("/realtimeproducts")
             }
 
             const user = await services.userService.getUserByEmail(email);

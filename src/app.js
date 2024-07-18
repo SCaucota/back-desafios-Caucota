@@ -1,6 +1,5 @@
 import express from "express";
 import exphbs from "express-handlebars";
-import { Server } from "socket.io";
 import manejadorError from "./middleware/error.js";
 
 import viewsRouter from "./routes/views.router.js";
@@ -9,13 +8,13 @@ import cartsRouter from "./routes/carts.router.js";
 import sessionsRouter from "./routes/sessions.router.js";
 import userRouter from "./routes/user.router.js";
 
-import services from "./services/index.js";
-import MessageModel from "./models/message.model.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
 import {addLogger} from "./utils/logger.js";
 import "./database.js";
+import SocketManager from "./sockets/socketManager.js";
+
 const app = express();
 const PUERTO = 8080;
 
@@ -47,65 +46,4 @@ const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto http//localhost:${PUERTO}`);
 });
 
-
-const io = new Server(httpServer);
-
-io.use((socket, next) => {
-    cookieParser()(socket.request, {}, () => {
-        passport.authenticate('jwt', { session: false }, (err, user, info) => {
-            if (err) return next(err);
-            if (!user) return next(new Error('Authentication error'));
-            socket.request.user = user;
-            next();
-        })(socket.request, {}, next);
-    });
-});
-
-io.on("connection", async (socket) => {
-    console.log("Un cliente se conecto");
-
-    socket.on("getProducts", async() => {
-        try {
-            const { user } = socket.request;
-            const products = await services.productService.getProducts(user)
-            socket.emit("products", products)
-        } catch (error) {
-            console.error("Error al obtener los productos:", error);
-            socket.emit("error", "Error al obtener los productos");
-        }
-    })
-
-    /* socket.emit("products", await services.productService.getProducts()); */
-
-    socket.on("deleteProduct", async (id) => {
-        try {
-            const { user } = socket.request;
-            await services.productService.deleteProduct(id);
-            socket.emit("products", await services.productService.getProducts(user));
-        } catch (error) {
-            console.error("Error al obtener los productos:", error);
-            socket.emit("error", "Error al obtener los productos");
-        }
-    });
-
-    socket.on("addProduct", async (product) => {
-        try {
-            const {user} = socket.request;
-            const {title, description, code, price, img, status, stock, category} = product;
-            await services.productService.addProduct({title, description, code, price, img, status, stock, category}, user);
-            socket.emit("products", await services.productService.getProducts(user));
-        } catch (error) {
-            console.error("Error al obtener los productos:", error);
-            socket.emit("error", "Error al obtener los productos");
-        }
-        
-    })
-
-    socket.on("message", async data => {
-        await MessageModel.create(data);
-
-        const messages = await MessageModel.find();
-
-        io.sockets.emit("message", messages)
-    });
-});
+const socketManager = new SocketManager(httpServer);
