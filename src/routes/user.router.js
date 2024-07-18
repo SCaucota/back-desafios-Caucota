@@ -14,6 +14,8 @@ router.get("/admin", passport.authenticate("jwt", {session: false}), userControl
 router.get("/products", passport.authenticate("jwt", {session: false}), (req, res) => {
     res.render("products", {email: req.user.email});
 })
+router.post("/user/requestPasswordReset", userController.requestPasswordReset);
+router.post("/user/resetPassword", userController.resetPassword);
 
 
 export default router;

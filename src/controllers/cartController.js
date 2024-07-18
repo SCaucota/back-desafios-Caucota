@@ -1,7 +1,9 @@
 import services from "../services/index.js";
-import nodemailer from "nodemailer";
 import twilio from "twilio";
 import configObject from "../config/config.js";
+import EmailManager from "../services/email.js";
+
+const emailManager = new EmailManager();
 
 class cartController {
     addCart = async (req, res, next) => {
@@ -156,18 +158,8 @@ class cartController {
 
                 const ticket = await services.ticketService.generateTicket(ticketData);
 
-                const mailOptions = {
-                    from: configObject.MAILING_USER,
-                    to: "nutellitadivergente@gmail.com",
-                    subject: "Ticket de compra",
-                    html: `
-                        <h1>Ticket de compra: ${ticket._id}</h1>
-                        <h2>Tu compra se generó exitosamente</h2>
-                        <h2>¡Muchas gracias por tu compra!</h2>
-                    `
-                };
+                await emailManager.sendEmailTicket(userEmail, ticket._id)
 
-                await transporter.sendMail(mailOptions);
                 await client.messages.create({
                     body: `Su compra se realizó exitosamente: ${ticket._id} ¡Muchas gracias por tu compra!`,
                     from: configObject.TWILIO_SMS_NUMBER,

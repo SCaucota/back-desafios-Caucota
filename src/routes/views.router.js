@@ -169,4 +169,16 @@ router.get("/loggerTest", (req, res) => {
     res.send("Logs generados")
 })
 
+router.get("/resetpassword", (req, res) => {
+    res.render("resetpassword");
+})
+
+router.get("/changepassword", (req, res) => {
+    res.render("changepassword");
+})
+
+router.get("/confirmacionEnvio", (req, res) => {
+    res.render("confirmacionEnvio");
+})
+
 export default router;

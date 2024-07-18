@@ -19,7 +19,6 @@ const generateInfoErrorUser = (user) => {
     - Apellido: ${user.last_name}
     - Email: ${user.email}
     - Edad: ${user.age}
-    - Rol: ${user.role}
     `
 }
 
