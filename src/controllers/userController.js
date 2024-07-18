@@ -155,7 +155,7 @@ class UserController {
 
             await services.userService.updateToken(user._id, user);
 
-            await emailManager.enviarCorreoReestablecimiento(email, user.first_name, token);
+            await emailManager.enviarCorreoRestablecimiento(email, user.first_name, token);
             
 
             res.redirect("/confirmacionEnvio")

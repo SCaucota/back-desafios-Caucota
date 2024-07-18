@@ -34,15 +34,15 @@ class EmailManager {
         }
     }
 
-    async enviarCorreoReestablecimiento(email, first_name, token) {  
+    async enviarCorreoRestablecimiento(email, first_name, token) {  
         try {
             const mailOptions = {
                 from: configObject.MAILING_USER,
                 to: email,
-                subject: "Reestablecimiento de contraseña",
+                subject: "Restablecimiento de contraseña",
                 html: `
-                    <h1>Reestablecimiento de contraseña</h1
-                    <p>Se reestablecerá tu contraseña, ${first_name}!</p>
+                    <h1>Restablecimiento de contraseña</h1
+                    <p>Se restablecerá tu contraseña, ${first_name}!</p>
                     <p>Código de confirmación: </p>
                     <strong>${token}</strong>
                     <p>Este código expira en una hora</p>
@@ -52,7 +52,7 @@ class EmailManager {
 
             await this.transporter.sendMail(mailOptions)
         } catch (error) {
-            console.log('Error al enviar el correo de reestablecimiento', error)
+            console.log('Error al enviar el correo de restablecimiento', error)
         }
     }
 }

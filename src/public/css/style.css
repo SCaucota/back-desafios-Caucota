@@ -34,3 +34,8 @@ h1{
     text-align: center;
     margin-top: 2rem;
 }
+
+/*---Manejo de restablecimiento de contraseña--*/
+.errorPassword{
+    color: red;
+}
