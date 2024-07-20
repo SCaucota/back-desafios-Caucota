@@ -10,9 +10,10 @@ class cartController {
     addCart = async (req, res, next) => {
         try {
             await services.cartService.addCart();
-            res.status(200).send({ message: "Carrito creado con éxito" });
+            res.status(200).send({ message: "Carrito creado con éxito" });
         } catch (error) {
-            res.status(500).send({ error: "Error al agregar un nuevo carrito" });
+            req.logger.error("Error al crear un nuevo carrito", error);
+            res.status(500).send({ error: "Error interno del servidor" });
         }
     }
 
@@ -42,13 +43,14 @@ class cartController {
 
             if (!cart) {
                 req.logger.error(`El carrito con ID "${id}" no existe.`);
-                return;
+                return res.status(404).send({ error: "Carrito no encontrado" });
+                
             }
             req.logger.info(`Carrito con ID "${id}" encontrado.`);
-            res.json(cart);
+            res.status(200).json(cart);
         } catch (error) {
             req.logger.error("Error al obtener los productos del carrito", error);
-            res.status(500).send({ error: "Error al obtener los productos del carrito" });
+            res.status(500).send({ error: "Error interno del servidor" });
         }
     };
 
@@ -65,7 +67,8 @@ class cartController {
 
             res.json(cart);
         } catch (error) {
-            res.status(500).send({ error: "Error al actualizar los productos del carrito" });
+            console.error("Error al actualizar los productos del carrito:", error);
+            res.status(500).send({ error: "Error interno del servidor al actualizar los productos del carrito" });
         }
     }
 

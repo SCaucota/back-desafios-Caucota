@@ -1,0 +1,89 @@
+paths:
+  /api/carts:
+    post:
+      summary: Crea un carrito vacío
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/createCart'
+      responses:
+        "200":
+          description: Carrito creado con éxito
+        "500":
+          description: Error interno del servidor
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene los productos de un carrito por su Id
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito que se quiere obtener
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Productos del carrito obtenidos con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart' #hacer uno nuevo en donde solo se muestren los productos en el example
+        "404":
+          description: Carrito no encontrado
+        "500":
+          description: Error interno del servidor
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del carrito autogenerado por MongoDB
+        products:
+          type: array
+          description: Lista de productos
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: ID del producto autogenerado por MongoDB
+              quantity:
+                type: number
+                description: Cantidad de productos
+      example:
+        _id: ObjectId("5f9c0b9b3a0a0b0b0b0b0b0b")
+        products:  
+          - product: ObjectId("5f9c0b9b3a0a0b0b0b0b0b0b"),
+            quantity: 3
+  requestBodies:
+    createCart:
+      type: object
+      properties: 
+        _id:
+          type: string
+          description: ID del carrito autogenerado por MongoDB
+        products:
+          type: array
+          description: Lista de productos (Vacío en este caso)
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: ID del producto autogenerado por MongoDB
+              quantity:
+                type: number
+                description: Cantidad de productos
+            example:
+              _id: ObjectId("5f9c0b9b3a0a0b0b0b0b0b0b")
+              products: []

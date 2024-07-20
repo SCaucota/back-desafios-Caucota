@@ -1,6 +1,8 @@
 import express from "express";
 import exphbs from "express-handlebars";
 import manejadorError from "./middleware/error.js";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 import viewsRouter from "./routes/views.router.js";
 import productsRouter from "./routes/products.router.js";
@@ -17,6 +19,20 @@ import SocketManager from "./sockets/socketManager.js";
 
 const app = express();
 const PUERTO = 8080;
+
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Documentacion App Libros",
+            description: "App para la compra y venta de libros"
+        },
+    },
+    apis: ["./src/docs/**/*.yaml"],
+}
+
+const specs = swaggerJsdoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
