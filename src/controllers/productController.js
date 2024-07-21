@@ -31,16 +31,6 @@ class ProductController {
                     code: EErrors.PRODUCT_ALREADY_EXIST
                 })
             };
-            
-            /* const isPremiumUser = req.user.role === "premium";
-
-            let newProduct
-
-            if (isPremiumUser) {
-                newProduct = await services.productService.addProduct({ title, description, code, price: parsedPrice, img, status, stock: parsedStock, category, owner: req.user.email });
-            } else {
-                newProduct = await services.productService.addProduct({ title, description, code, price: parsedPrice, img, status, stock: parsedStock, category});
-            } */
 
             res.json(newProduct);
         } catch (error) {

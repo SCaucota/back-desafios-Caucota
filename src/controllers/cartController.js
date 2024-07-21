@@ -36,9 +36,8 @@ class cartController {
     getCartProducts = async (req, res) => {
         try {
             const id = req.params.cid
-            const userCartId = req.user.cart._id
 
-            const cart = await services.cartService.getCartProducts(id, userCartId);
+            const cart = await services.cartService.getCartProducts(id);
 
             if (!cart) {
                 req.logger.error(`El carrito con ID "${id}" no existe.`);

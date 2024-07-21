@@ -4,7 +4,7 @@ import passport from "passport";
 import CartController from "../controllers/cartController.js";
 const cartController = new CartController();
 
-/**/router.get("/carts/:cid", passport.authenticate('jwt', { session: false }),cartController.getCartProducts);
+/**/router.get("/carts/:cid", cartController.getCartProducts);
 /**/router.post("/carts/:cid/purchase", passport.authenticate('jwt', { session: false }), cartController.purchaseCart);
 /**/router.post("/carts", cartController.addCart);
 router.post("/carts/:cid/product/:pid", cartController.addProductToCart);

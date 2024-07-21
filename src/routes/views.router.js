@@ -32,10 +32,6 @@ router.get("/", checkAuthenticated, (req,res) => {
     res.render("login");
 });
 
-router.get("*", (req, res) => {
-    res.render("404");
-})
-
 router.get("/products", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]),async (req, res) => {
     try{
 
@@ -119,8 +115,12 @@ router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failure
         if(!cart){
             return res.status(404).send("Carrito no encontrado");
         }
-
-        res.render("cart", {cart: cart, cartId: cartId});
+        
+        if(cartId.toString() !== userCartId.toString()){
+            return res.render("404")
+        }else{
+            res.render("cart", {cart: cart, cartId: cartId});
+        }
 
     }catch (error){
         req.logger.error("Error al obtener el carrito", error);

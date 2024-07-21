@@ -10,9 +10,6 @@ const manejadorError = (error, req, res, next) => {
         case EErrors.USER_ALREADY_EXIST:
             res.send({status: "error", error: error.name})
             break;
-        case EErrors.PAGE_NOT_FOUND:
-            res.render("404");
-            break;
         default:
             res.status({status: "error", error: "Error desconocido"})
         }

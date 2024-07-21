@@ -156,7 +156,7 @@ paths:
               $ref: '#/components/requestBodies/addProductCart'
       responses:
         "200":
-          description: El producto fue agregado con éxito
+          description: El producto fue agregado al carrito con éxito
 components:
   securitySchemes:
     BarerAuth:

@@ -39,11 +39,10 @@ class CartRepository {
         }
     }
 
-    async getCartProducts(cartId, userCartId) {
+    async getCartProducts(cartId) {
         try {
             const cart = await CartModel.findById(cartId).lean();
             if (!cart) throw new Error(`Carrito con ID "${cartId}" no encontrado`);
-            if (cart._id.toString() !== userCartId.toString()) throw new Error("Acceso no autorizado");
             return cart.products;
         } catch (error) {
             throw new Error("Error al obtener los Productos:", error);
