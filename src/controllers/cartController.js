@@ -3,14 +3,15 @@ import twilio from "twilio";
 import configObject from "../config/config.js";
 import EmailManager from "../services/email.js";
 import swal from "sweetalert2";
+import { SubscribedTrackListInstance } from "twilio/lib/rest/video/v1/room/participant/subscribedTrack.js";
 
 const emailManager = new EmailManager();
 
 class cartController {
     addCart = async (req, res, next) => {
         try {
-            await services.cartService.addCart();
-            res.status(200).send({ message: "Carrito creado con éxito" });
+            const newCart = await services.cartService.addCart();
+            res.status(200).send(newCart);
         } catch (error) {
             req.logger.error("Error al crear un nuevo carrito", error);
             res.status(500).send({ error: "Error interno del servidor" });
@@ -23,23 +24,21 @@ class cartController {
             const cartId = req.params.cid;
             const quantity = req.body.quantity || 1;
             
-            const cart = await services.cartService.addProductToCart(cartId, productId, quantity);
+            await services.cartService.addProductToCart(cartId, productId, quantity);
 
-            if (!cart) {
-                return res.status(404).send({ error: `Carrito con ID "${cartId}" no encontrado` });
-            }
-
-            res.redirect("/carts/" + cartId);
+            res.status(200).redirect("/carts/" + cartId);
         } catch (error) {
-            res.status(500).send({ error: "Error al agregar el producto" } + error);
+            req.logger.error("Error al agregar el producto", error);
+            res.status(500).send({ error: "Error interno del servidor" });
         }
     }
 
     getCartProducts = async (req, res) => {
         try {
             const id = req.params.cid
+            const userCartId = req.user.cart._id
 
-            const cart = await services.cartService.getCartProducts(id);
+            const cart = await services.cartService.getCartProducts(id, userCartId);
 
             if (!cart) {
                 req.logger.error(`El carrito con ID "${id}" no existe.`);
@@ -65,10 +64,10 @@ class cartController {
                 return res.status(404).send({ error: "Carrito no encontrado" });
             };
 
-            res.json(cart);
+            res.status(200).json(cart);
         } catch (error) {
             console.error("Error al actualizar los productos del carrito:", error);
-            res.status(500).send({ error: "Error interno del servidor al actualizar los productos del carrito" });
+            res.status(500).send({ error: "Error interno del servidor" });
         }
     }
 
@@ -122,34 +121,20 @@ class cartController {
 
             if (!cart) {
                 req.logger.error(`El carrito con ID "${id}" no existe`);
-                return null;
+                return res.status(404).send({ error: "Carrito no encontrado" });    
             }
 
-            req.logger.info("Carrito eliminado exitosamente");
-            res.render("products", { status: "success", message: "Carrito eliminado exitosamente" });
+            req.logger.info("Carrito vaciado exitosamente");
+            /* res.status(200).send(cart).render("products", {status: sucess, message: "Carrito vaciado exitosamente"}); */
+            res.status(200).send(cart).render("products");
         } catch (error) {
             req.logger.error("Error al eliminar los productos del carrito:", error);
-            res.status(500).send({ error: "Error al eliminar los productos del carrito" });
+            res.status(500).send({ error: "Error interno del servidor" });
         }
     }
     
 
     purchaseCart = async (req, res) => {
-
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            port: 587,
-            auth: {
-                user: configObject.MAILING_USER,
-                pass: configObject.MAILING_PASSWORD
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        })
-
-        const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN);
-
         try {
             const cartId = req.params.cid;
             const userEmail = req.user.email;
@@ -164,16 +149,11 @@ class cartController {
 
                 await emailManager.sendEmailTicket(userEmail, ticket._id)
 
-                await client.messages.create({
-                    body: `Su compra se realizó exitosamente: ${ticket._id} ¡Muchas gracias por tu compra!`,
-                    from: configObject.TWILIO_SMS_NUMBER,
-                    to: "+543517887437"
-                });
-
-                res.render("checkout", { isEmpty: false, ticketId: ticket._id, unprocessedProducts, cartId });
+                res.status(200).render("checkout", { isEmpty: false, ticketId: ticket._id, unprocessedProducts, cartId });
             }
         } catch (error) {
-            res.status(500).send({ error: `Error al realizar la compra del carrito Controller: ${error.message}` });
+            req.logger.error("Error al realizar la compra del carrito:", error);
+            res.status(500).send({ error: "Error interno del servidor" });
         }
     }
 }

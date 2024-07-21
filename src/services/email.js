@@ -28,7 +28,7 @@ class EmailManager {
                     <h2>¡Muchas gracias por tu compra!</h2>
                 `
             };
-            await this.transporter.sendEmailTicket(mailOptions)
+            await this.transporter.sendMail(mailOptions)
         } catch (error) {
             console.log('Error al enviar el email', error)
         }

@@ -4,15 +4,13 @@ paths:
       summary: Crea un carrito vacío
       tags:
         - Carts
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/requestBodies/createCart'
       responses:
         "200":
           description: Carrito creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/requestBodies/create-emptyCart'
         "500":
           description: Error interno del servidor
   /api/carts/{cid}:
@@ -35,12 +33,136 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Cart' #hacer uno nuevo en donde solo se muestren los productos en el example
+                  $ref: '#/components/requestBodies/getProductsCart'
         "404":
           description: Carrito no encontrado
         "500":
           description: Error interno del servidor
+    put:
+      summary: Actualiza todos los productos del carrito
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito que se quiere actualizar
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              $ref: '#/components/requestBodies/updateProductsCart'
+      responses:
+        "200":
+          description: Productos del carrito actualizados con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        "404":
+          description: Carrito no encontrado
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: Vacia un carrito
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito que se quiere vaciar
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Carrito vaciado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/requestBodies/create-emptyCart'
+        "404":
+          description: Carrito no encontrado
+        "500":
+          description: Error interno del servidor
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Realiza la compra del carrito
+      security:
+        - BarerAuth: []
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito del que se quiere realizar la compra
+        schema:
+          type: string
+      requestBody:
+        description: Datos de autenticación del usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Token JWT de autenticación
+      responses:
+        "200":
+          description: Carrito vaciado con éxito y vista de checkout renderizada
+          content:
+            text/html:
+              schema:
+                type: string
+                description: La vista renderizada de la página checkout
+        "401":
+          description: No autorizado
+        "500":
+          description: Error interno del servidor
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Agrega un producto al carrito
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito al que se quiere agregar el producto
+        schema:
+          type: string
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que se quiere agregar
+        schema:
+          type: string
+      requestBody:
+        description: Cantidad del producto que se quiere agregar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/requestBodies/addProductCart'
+      responses:
+        "200":
+          description: El producto fue agregado con éxito
 components:
+  securitySchemes:
+    BarerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Cart:
       type: object
@@ -55,18 +177,59 @@ components:
             type: object
             properties:
               product:
-                type: string
-                description: ID del producto autogenerado por MongoDB
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: ID del producto autogenerado por MongoDB
+                  title:
+                    type: string
+                    description: Titulo del producto
+                  description:
+                    type: string
+                    description: Descripción del producto
+                  code:
+                    type: string
+                    description: Código del producto
+                  price:
+                    type: number
+                    description: Precio del producto
+                  img:
+                    type: string
+                    description: Imagen del producto
+                  status:
+                    type: boolean
+                    description: Estatus del producto
+                  stock:
+                    type: number
+                    description: Stock del producto
+                  category:
+                    type: string
+                    description: Categoría del producto
+                  owner:
+                    type: string
+                    description: Creador del producto
               quantity:
                 type: number
                 description: Cantidad de productos
       example:
-        _id: ObjectId("5f9c0b9b3a0a0b0b0b0b0b0b")
+        _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
         products:  
-          - product: ObjectId("5f9c0b9b3a0a0b0b0b0b0b0b"),
-            quantity: 3
+          - product:
+              _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
+              title: "Harry Potter y la piedra filosofal"
+              description: "Libro escrito por J.K.Rowling"
+              code: "abc12"
+              price: 22000
+              img: "Sin imagen"
+              status: true
+              stock: 0
+              category: "fantasia"
+              owner: "admin"
+            quantity: 32
+            _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
   requestBodies:
-    createCart:
+    create-emptyCart:
       type: object
       properties: 
         _id:
@@ -75,15 +238,74 @@ components:
         products:
           type: array
           description: Lista de productos (Vacío en este caso)
-          items:
-            type: object
-            properties:
-              product:
-                type: string
-                description: ID del producto autogenerado por MongoDB
-              quantity:
-                type: number
-                description: Cantidad de productos
-            example:
-              _id: ObjectId("5f9c0b9b3a0a0b0b0b0b0b0b")
-              products: []
+      example:
+        _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
+        products: []
+    getProductsCart:
+      type: object
+      properties:
+        product:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: ID del producto autogenerado por MongoDB
+            title:
+              type: string
+              description: Titulo del producto
+            description:
+              type: string
+              description: Descripción del producto
+            code:
+              type: string
+              description: Código del producto
+            price:
+              type: number
+              description: Precio del producto
+            img:
+              type: string
+              description: Imagen del producto
+            status:
+              type: boolean
+              description: Estatus del producto
+            stock:
+              type: number
+              description: Stock del producto
+            category:
+              type: string
+              description: Categoría del producto
+            owner:
+              type: string
+              description: Creador del producto
+        quantity:
+          type: number
+          description: Cantidad de productos
+        _id:
+          type: string
+          description: ID del carrito autogenerado por MongoDB
+      example:
+        product:
+          _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
+          title: "Product 1"
+          description: "Description 1"
+          code: "code 1"
+          price: 100
+          img: "img 1"
+          status: true
+          stock: 10
+          category: "category 1"
+          owner: "admin"
+        quantity: 3
+        _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
+    updateProductsCart:
+      type: object
+      properties:
+        product:
+          type: string
+          description: ID del producto autogenerado por MongoDB
+        quantity:
+          type: number
+          description: Cantidad de productos 
+      example:
+        - product: "6626a9692bb764cfa4747441"
+          quantity: 32

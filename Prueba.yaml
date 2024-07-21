@@ -77,6 +77,31 @@ components:
               products:
                 product: ObjectId("5f8e5f8e5f8e5f8e5f8e5f8e")
                 quantity: 3
+    Ticket:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del carrito autogenerado por MongoDB
+        code:
+          type: string
+          description: Código del carrito
+        amount:
+          type: number
+          description: Monto total del carrito
+        purchaser:
+          type: string
+          description: Email del comprador del carrito
+        purchase_datetime:
+          type: string
+          format: date-time
+          description: Fecha de compra del carrito
+      example:
+        _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
+        code: "abc123"
+        amount: 22000
+        purchaser: "masocaucota@gmail.com"
+        purchase_datetime: "2020-01-01T00:00:00.000Z"
   requestBodies:
     createCart:
       type: object
