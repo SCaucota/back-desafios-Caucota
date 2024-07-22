@@ -26,7 +26,8 @@ class cartController {
             
             await services.cartService.addProductToCart(cartId, productId, quantity);
 
-            res.status(200).redirect("/carts/" + cartId);
+            req.logger.info(`Producto con ID "${productId}" agregado al carrito con ID "${cartId}".`);
+            res.status(200).redirect(`/carts/${cartId}`);
         } catch (error) {
             req.logger.error("Error al agregar el producto", error);
             res.status(500).send({ error: "Error interno del servidor" });
@@ -79,15 +80,15 @@ class cartController {
             const cart = await services.cartService.updateAProductInCart(cartId, productId, quantity);
 
             if (!cart) {
-                req.logger.error(`El carrito con ID "${id}" no existe`);
+                req.logger.error(`El carrito con ID "${cartId}" no existe`);
                 return null;
             };
 
-            req.logger.info(`Carrito de ID "${id}" actualizado con éxito`);
-            res.status(200).send({ message: "Producto actualizado exitosamente" });
+            req.logger.info(`Carrito de ID "${cartId}" actualizado con éxito`);
+            res.status(200).json(cart.products);
         } catch (error) {
             req.logger.error("Error al cambiar la cantidad del producto:", error);
-            res.status(500).send({ error: "Error al cambiar la cantidad del producto" });
+            res.status(500).send({ error: "Error interno del servidor" });
         }
 
     }
@@ -105,10 +106,10 @@ class cartController {
             }
 
             req.logger.info("Producto eliminado del carrito con éxito");
-            res.status(200).send({ message: "Producto eliminado exitosamente" });
+            res.status(200).send(cart.products);
         } catch (error) {
             req.logger.error("Error al eliminar el producto del carrito:", error);
-            res.status(500).send({ error: "Error al eliminar el producto del carrito" });
+            res.status(500).send({ error: "Error interno del servidor" });
         }
     }
 

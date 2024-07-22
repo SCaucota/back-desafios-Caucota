@@ -1,0 +1,159 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Se obtienen todos los productos exitosamenente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "500":
+          description: Error interno del servidor
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: Se crea un nuevo producto exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Product'
+        "500":
+          description: Error interno del servidor
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un solo producto
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ID del producto
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Se obtiene un solo producto exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Product'
+        "500":
+          description: Error interno del servidor
+    put:
+      summary: Actualiza un solo producto
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ID del producto que se actualizará
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Nuevos datos del producto (Pueden ser menos datos)
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Product'
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: Elimina un producto
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ID del producto
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Se elimino el producto exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Se elimino el producto exitosamente"
+        "500":
+          description: Error interno del servidor
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+            _id:
+              type: string
+              description: ID del producto autogenerado por MongoDB
+            title:
+              type: string
+              description: Titulo del producto
+            description:
+              type: string
+              description: Descripción del producto
+            code:
+              type: string
+              description: Código del producto
+            price:
+              type: number
+              description: Precio del producto
+            img:
+              type: string
+              description: Imagen del producto
+            status:
+              type: boolean
+              description: Estatus del producto
+            stock:
+              type: number
+              description: Stock del producto
+            category:
+              type: string
+              description: Categoría del producto
+            owner:
+              type: string
+              description: Creador del producto
+      example:
+        title: "Destinos divididos"
+        description: "Libro escrito por Julian Torres"
+        code: "d5d6s6"
+        price: 13000
+        img: "Sin imagen"
+        status: true
+        stock: 10
+        category: "ciencia ficcion"
+        owner: "admin"

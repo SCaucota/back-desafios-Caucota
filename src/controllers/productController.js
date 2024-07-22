@@ -32,6 +32,8 @@ class ProductController {
                 })
             };
 
+            const newProduct = await services.productService.addProduct({title, description, code, price: parsedPrice, img, status, stock: parsedStock, category});
+
             res.json(newProduct);
         } catch (error) {
             next(error);
@@ -54,7 +56,7 @@ class ProductController {
             }
         } catch (error) {
             req.logger.error("Error al obtener los productos", error);
-            res.status(500).json({ error: "Error al obtener los productos" });
+            res.status(500).json({ error: "Error interno del servidor" });
         }
     }
 
@@ -72,7 +74,7 @@ class ProductController {
                 })
             }
 
-            res.send(product);
+            res.json(product);
         } catch (error) {
             next(error);
         }
@@ -91,10 +93,10 @@ class ProductController {
             }
 
             req.logger.info(`Producto con ID "${id}" actualizado correctamente`);
-            res.status(200).json({ message: "El producto se actualizo correctamente" });
+            res.status(200).json(updateProduct);
         } catch (error) {
             req.logger.error("Error al actualizar el Producto", error);
-            res.status(500).json({ error: "Error al actualizar el producto" });
+            res.status(500).json({ error: "Error interno del servidor" });
         }
     }
 
@@ -103,18 +105,12 @@ class ProductController {
             const id = req.params.pid
             const deleteProduct = await services.productService.deleteProduct(id);
 
-            if (!deleteProduct) {
-                req.logger.error(`El producto de id "${id}" no existe`);
-                return null;
-            }
-
             req.logger.info(`Producto con ID "${id}" eliminado correctamente`);
-            res.status(200).json({ message: "El producto se elimino correctamente" });
+            res.status(200).send({ message: "Se elimino el producto exitosamente" });
         }catch (error) {
             req.logger.error("Error al actualizar el producto", error);
             res.status(500).json({ error: "Error al intentar eliminar el producto" });
         }
-        
     }
 }
 

@@ -33,7 +33,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/requestBodies/getProductsCart'
+                  $ref: '#/components/schemas/ProductsCart'
         "404":
           description: Carrito no encontrado
         "500":
@@ -131,6 +131,8 @@ paths:
   /api/carts/{cid}/product/{pid}:
     post:
       summary: Agrega un producto al carrito
+      security:
+        - BarerAuth: []
       tags:
         - Carts
       parameters:
@@ -153,10 +155,83 @@ paths:
           application/json:
             schema:
               type: object
-              $ref: '#/components/requestBodies/addProductCart'
+              properties:
+                token:
+                  type: string
+                  description: Token JWT de autenticación
       responses:
         "200":
           description: El producto fue agregado al carrito con éxito
+          content:
+            text/html:
+              schema:
+                type: string
+                description: La vista renderizada de la página del carrito
+        "500":
+          description: Error interno del servidor
+    put:
+      summary: Actualiza la cantidad de un producto en el carrito
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito al que se quiere modificar la cantidad del producto
+        schema:
+          type: string
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto cuya cantidad se quiere modificar
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/requestBodies/updateQuantityProductCart'
+      responses:
+        "200":
+          description: La cantidad del producto fue actualizada con exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductsCart'
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: Elimina un producto del carrito
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito del que se quiere eliminar el producto
+        schema:
+          type: string
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que se quiere eliminar
+        schema:
+          type: string
+      responses:
+        "200":
+          description: El producto fue eliminado del carrito con exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductsCart'
+        "500":
+          description: Error interno del servidor
 components:
   securitySchemes:
     BarerAuth:
@@ -228,20 +303,7 @@ components:
               owner: "admin"
             quantity: 32
             _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
-  requestBodies:
-    create-emptyCart:
-      type: object
-      properties: 
-        _id:
-          type: string
-          description: ID del carrito autogenerado por MongoDB
-        products:
-          type: array
-          description: Lista de productos (Vacío en este caso)
-      example:
-        _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
-        products: []
-    getProductsCart:
+    ProductsCart:
       type: object
       properties:
         product:
@@ -297,6 +359,19 @@ components:
           owner: "admin"
         quantity: 3
         _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
+  requestBodies:
+    create-emptyCart:
+      type: object
+      properties: 
+        _id:
+          type: string
+          description: ID del carrito autogenerado por MongoDB
+        products:
+          type: array
+          description: Lista de productos (Vacío en este caso)
+      example:
+        _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
+        products: []
     updateProductsCart:
       type: object
       properties:
@@ -309,3 +384,11 @@ components:
       example:
         - product: "6626a9692bb764cfa4747441"
           quantity: 32
+    updateQuantityProductCart:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: Cantidad de productos 
+      example:
+        quantity: 32

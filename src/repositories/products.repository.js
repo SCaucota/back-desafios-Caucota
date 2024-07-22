@@ -8,7 +8,8 @@ class ProductRepository {
             }
 
             const newProduct = new ProductModel(productsData);
-            return await newProduct.save();
+            await newProduct.save();
+            return newProduct;
         } catch (error) {
             throw new Error("Error al agregar el nuevo producto" + error);
         }
