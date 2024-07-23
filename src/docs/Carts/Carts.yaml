@@ -161,7 +161,7 @@ paths:
                   description: Token JWT de autenticación
       responses:
         "200":
-          description: El producto fue agregado al carrito con éxito
+          description: El producto fue agregado al carrito con éxito y se renderiza al a página del carrito
           content:
             text/html:
               schema:
@@ -252,41 +252,13 @@ components:
             type: object
             properties:
               product:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    description: ID del producto autogenerado por MongoDB
-                  title:
-                    type: string
-                    description: Titulo del producto
-                  description:
-                    type: string
-                    description: Descripción del producto
-                  code:
-                    type: string
-                    description: Código del producto
-                  price:
-                    type: number
-                    description: Precio del producto
-                  img:
-                    type: string
-                    description: Imagen del producto
-                  status:
-                    type: boolean
-                    description: Estatus del producto
-                  stock:
-                    type: number
-                    description: Stock del producto
-                  category:
-                    type: string
-                    description: Categoría del producto
-                  owner:
-                    type: string
-                    description: Creador del producto
+                $ref: '#/components/schemas/Product'
               quantity:
                 type: number
                 description: Cantidad de productos
+              _id:
+                type: string
+                description: ID del array products autogenerado por MongoDB
       example:
         _id: "5f9c0b9b3a0a0b0b0b0b0b0b"
         products:  
@@ -307,38 +279,7 @@ components:
       type: object
       properties:
         product:
-          type: object
-          properties:
-            _id:
-              type: string
-              description: ID del producto autogenerado por MongoDB
-            title:
-              type: string
-              description: Titulo del producto
-            description:
-              type: string
-              description: Descripción del producto
-            code:
-              type: string
-              description: Código del producto
-            price:
-              type: number
-              description: Precio del producto
-            img:
-              type: string
-              description: Imagen del producto
-            status:
-              type: boolean
-              description: Estatus del producto
-            stock:
-              type: number
-              description: Stock del producto
-            category:
-              type: string
-              description: Categoría del producto
-            owner:
-              type: string
-              description: Creador del producto
+          $ref: '#/components/schemas/Product'
         quantity:
           type: number
           description: Cantidad de productos

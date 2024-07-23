@@ -125,8 +125,7 @@ class cartController {
             }
 
             req.logger.info("Carrito vaciado exitosamente");
-            /* res.status(200).send(cart).render("products", {status: sucess, message: "Carrito vaciado exitosamente"}); */
-            res.status(200).send(cart).render("products");
+            res.status(200).send(cart);
         } catch (error) {
             req.logger.error("Error al eliminar los productos del carrito:", error);
             res.status(500).send({ error: "Error interno del servidor" });

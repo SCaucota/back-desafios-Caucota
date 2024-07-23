@@ -117,9 +117,6 @@ components:
     Product:
       type: object
       properties:
-            _id:
-              type: string
-              description: ID del producto autogenerado por MongoDB
             title:
               type: string
               description: Titulo del producto
