@@ -51,7 +51,7 @@ describe("SuperTest", () => {
         expect(userStatusCode).to.equal(200);
         console.log(userBody)
         userCartId = userBody.cart._id;
-        userId = userBody._id
+        userId = userBody.id
         
     });
 
