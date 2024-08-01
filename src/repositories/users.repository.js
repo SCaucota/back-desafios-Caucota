@@ -62,6 +62,18 @@ class UserRepository {
             throw new Error("Error al cambiar el rol" + error);
         }
     }
+
+    async deleteUser(id) {
+        try {
+            const deleteUser = await UserModel.findByIdAndDelete(id).lean();
+            if(!deleteUser) throw new Error("Usuario no encontrado");
+            
+            return deleteUser
+        } catch (error) {
+            throw new Error("Error al eliminar el usuario", error);
+        }
+
+    }
 }
 
 export default UserRepository;

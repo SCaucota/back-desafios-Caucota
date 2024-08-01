@@ -116,6 +116,15 @@ class CartRepository {
         }
     }
 
+    async deleteCart(cartId) {
+        try {
+            await CartModel.findByIdAndDelete(cartId);
+            return true;
+        } catch (error) {
+            throw new Error("Error al eliminar el carrito:", error);
+        }
+    }
+
     async purchaseCart(cartId, userEmail) {
         try {
             const cart = await CartModel.findById(cartId);

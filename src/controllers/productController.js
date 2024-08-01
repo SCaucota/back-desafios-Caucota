@@ -103,7 +103,7 @@ class ProductController {
     deleteProduct = async (req, res) => {
         try {
             const id = req.params.pid
-            const deleteProduct = await services.productService.deleteProduct(id);
+            await services.productService.deleteProduct(id);
 
             req.logger.info(`Producto con ID "${id}" eliminado correctamente`);
             res.status(200).send({ message: "Se elimino el producto exitosamente" });

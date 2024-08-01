@@ -226,6 +226,22 @@ class UserController {
             res.status(500).send("Error en el servidor" + error)
         }
     }
+
+    deleteUser = async (req, res) => {
+        try {
+            const id = req.params.uid;
+            console.log(id)
+            const userCartId = req.user.cart._id;
+            console.log(userCartId)
+            await services.userService.deleteUser(id);
+            await services.cartService.deleteCart(userCartId);
+            res.status(200).send({meesage: "Se eliminó exitosamente el usuario"});
+
+        } catch (error) {
+            res.status(500).json({error: "Error en el servidor"});
+        }
+
+    }
 }
 
 export default UserController;
