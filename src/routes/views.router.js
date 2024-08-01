@@ -20,11 +20,13 @@ function checkAuthenticated(req, res, next) {
 
 function verifyRol (roles) {
     return (req, res, next) => {
-        if (!req.user || !roles.includes(req.user.role)) {
-            return res.status(401).send("No autorizado");
+        if (roles.includes(req.user.role)) {
+            return next();
         }
-
-        next();
+        if (req.user.role === 'admin') {
+            return res.status(401).redirect('/realtimeproducts');
+        }
+        return res.status(403).send('Acceso denegado');
     }
 }
 
