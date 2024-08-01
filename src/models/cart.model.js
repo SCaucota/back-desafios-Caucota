@@ -12,7 +12,11 @@ const cartSchema = new mongoose.Schema({
                 required: true
             }
         }
-    ]
+    ],
+    total: {
+        type: Number,
+        required: true
+    }
 })
 
 cartSchema.pre("findOne", function(next) {

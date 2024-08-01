@@ -115,14 +115,14 @@ describe("SuperTest", () => {
             const { statusCode, body } = await requester.get(`/api/carts/${cartId}`).set('Cookie', authToken);
             expect(statusCode).to.equal(200);
 
-            const addedProduct = body.find(product => product.product._id === productId);
+            const addedProduct = body.products.find(product => product.product._id === productId);
 
             expect(addedProduct).to.exist;
             expect(addedProduct.quantity).to.equal(2);
         });
 
         it("Modificar carrito completo sin cantidad esta debe ser 1 x producto", async() => {
-            const cardId = userCartId;
+            const cartId = userCartId;
             const newProducts = [
                 {
                     product: "6626a9692bb764cfa4747441"
@@ -132,13 +132,26 @@ describe("SuperTest", () => {
                 }
             ]
 
-            const { statusCode, body } = await requester.put(`/api/carts/${cardId}`).set('Cookie', authToken).send(newProducts);
-
+            const { statusCode, body } = await requester.put(`/api/carts/${cartId}`).set('Cookie', authToken).send(newProducts);
             const quantities = body.products.map(product => product.quantity);
 
             expect(statusCode).to.equal(200);
             expect(body).to.be.a('object');
             quantities.forEach(quantity => expect(quantity).to.equal(1));
+        })
+
+        it("Actualización total Carrito", async () => {
+            const cartId = userCartId;
+
+            const { statusCode, body } = await requester.get(`/api/carts/${cartId}`).set('Cookie', authToken);
+            
+            const updatedProducts = body.products;
+            const product1 = updatedProducts.find(product => product.product._id === "6626a9692bb764cfa4747441");
+            const product2 = updatedProducts.find(product => product.product._id === "6626a9692bb764cfa4747444");
+
+            const expectedTotalPrice = (product1.quantity * product1.product.price) + (product2.quantity * product2.product.price);
+            expect(statusCode).to.equal(200);
+            expect(body.total).to.equal(expectedTotalPrice);
         })
     })
 

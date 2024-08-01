@@ -8,7 +8,7 @@ import { EErrors } from "../services/errors/enum.js";
 class CartRepository {
     async addCart() {
         try {
-            const newCart = new CartModel({ products: [] });
+            const newCart = new CartModel({ products: [], total: 0 });
             return await newCart.save();
         } catch (error) {
             throw new Error("Error al agregar el nuevo carrito:", error);
@@ -23,6 +23,10 @@ class CartRepository {
             const product = await ProductModel.findById(productId);
             if (!product) throw new Error(`Producto con ID "${productId}" no encontrado`);
 
+            const total = cart.products
+                .map(product => product.product.price * product.quantity)
+                .reduce((a, b) => a + b, 0) + (product.price * quantity);
+
             const existingProduct = cart.products.find(prod => prod.product.id === productId);
 
             if (existingProduct) {
@@ -30,6 +34,8 @@ class CartRepository {
             } else {
                 cart.products.push({ product: productId, quantity });
             }
+
+            cart.total = total;
 
             cart.markModified("products");
 
@@ -42,8 +48,7 @@ class CartRepository {
     async getCartProducts(cartId) {
         try {
             const cart = await CartModel.findById(cartId).lean();
-            if (!cart) throw new Error(`Carrito con ID "${cartId}" no encontrado`);
-            return cart.products;
+            return cart || null;
         } catch (error) {
             throw new Error("Error al obtener los Productos:", error);
         }
@@ -55,13 +60,18 @@ class CartRepository {
             if (!cart) throw new Error(`Carrito con ID "${id}" no encontrado`);
 
             const formattedProducts = await Promise.all(updatedProducts.map(async (productData) => {
-                const product = await ProductModel.findById(productData.product);
+                const product = await ProductModel.findById(productData.product).lean();
                 if (!product) throw new Error(`Producto con ID "${productData.product}" no encontrado`);
 
                 return { product, quantity: productData.quantity };
             }));
 
             cart.products = formattedProducts;
+
+            const total = cart.products.reduce((acc, product) => acc + (product.product.price * product.quantity), 0);
+
+            cart.total = parseInt(total)
+            
             return await cart.save();
         } catch (error) {
             throw new Error("Error al actualizar los productos del carrito:", error);
@@ -77,6 +87,8 @@ class CartRepository {
             if (!productInCart) throw new Error(`Producto con ID "${productId}" no encontrado en el carrito`);
 
             productInCart.quantity = quantity;
+
+            cart.total = cart.total + (productInCart.product.price * quantity)
 
             cart.markModified("products");
 
@@ -96,6 +108,12 @@ class CartRepository {
             );
 
             cart.products = updatedProducts;
+            
+            const total = cart.products
+                .map(product => product.product.price * product.quantity)
+                .reduce((a, b) => a + b, 0);
+
+            cart.total = total
 
             return await cart.save();
         } catch (error) {
@@ -109,6 +127,7 @@ class CartRepository {
             if (!cart) throw new Error(`Carrito con ID "${cartId}" no encontrado`);
 
             cart.products = [];
+            cart.total = 0;
 
             return await cart.save();
         } catch (error) {

@@ -38,7 +38,7 @@ class cartController {
 
             if (!cart) {
                 req.logger.error(`El carrito con ID "${id}" no existe.`);
-                return res.status(404).send({ error: "Carrito no encontrado" });
+                return res.status(404).render("404");
                 
             }
             req.logger.info(`Carrito con ID "${id}" encontrado.`);
@@ -84,7 +84,7 @@ class cartController {
             };
 
             req.logger.info(`Carrito de ID "${cartId}" actualizado con éxito`);
-            res.status(200).json(cart.products);
+            res.status(200).json(cart);
         } catch (error) {
             req.logger.error("Error al cambiar la cantidad del producto:", error);
             res.status(500).send({ error: "Error interno del servidor" });
@@ -105,7 +105,7 @@ class cartController {
             }
 
             req.logger.info("Producto eliminado del carrito con éxito");
-            res.status(200).send(cart.products);
+            res.status(200).send(cart);
         } catch (error) {
             req.logger.error("Error al eliminar el producto del carrito:", error);
             res.status(500).send({ error: "Error interno del servidor" });

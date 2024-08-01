@@ -106,14 +106,15 @@ router.get("/products/:pid", passport.authenticate("jwt", { session: false, fail
     }
 });
 
-router.get("/carts/:cid",async (req, res) => {
+router.get("/carts/:cid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]), async (req, res) => {
     const cartId = req.params.cid;
     const userCartId = req.user.cart._id
+    
     try{
         const cart = await services.cartService.getCartProducts(cartId);
 
         if(!cart){
-            return res.status(404).send("Carrito no encontrado");
+            return res.render("404");
         }
         
         if(cartId.toString() !== userCartId.toString()){

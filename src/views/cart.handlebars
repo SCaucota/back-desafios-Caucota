@@ -1,7 +1,7 @@
 <h1>Carrito</h1>
 
-{{#if cart}}
-  {{#each cart}}
+{{#if cart.products}}
+  {{#each cart.products}}
     <div class="product">
       <h2>{{ product.title }}</h2>
       <p><strong>Description:</strong> {{ product.description }}</p>
@@ -11,9 +11,14 @@
       <p><strong>Stock:</strong> {{ product.stock }}</p>
       <p><strong>Category:</strong> {{ product.category }}</p>
       <h5><strong>Quantity:</strong>{{quantity}}</h5>
-      <button class="btn btn-danger delete-button" data-cart-id="{{../cartId}}" data-product-id="{{product._id}}" >Eliminar</button>
+      <button class="btn btn-danger delete-button" data-cart-id="{{../cartId}}" data-product-id="{{product._id}}" data-product-quantity="{{quantity}}" data-product-price="{{product.price}}">Eliminar</button>
     </div>
   {{/each}}
+
+  <h5>
+    <strong>Total: $</strong> 
+    <strong class="total">{{cart.total}}</strong>
+  </h5>
 
   <form action="/api/carts/{{cartId}}/purchase" method="post">
     <button type="submit" class="btn btn-primary">Comprar</button>
