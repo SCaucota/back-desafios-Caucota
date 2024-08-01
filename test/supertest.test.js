@@ -11,7 +11,7 @@ describe("SuperTest", () => {
     let authToken;
 
     before(async () => {
-        const registerResponse = await requester.post("/api/register")
+        const registerResponse = await requester.post("/api/sessions/register")
             .send({
                 first_name: "testuser",
                 last_name: "lastnametestuser",
@@ -21,7 +21,7 @@ describe("SuperTest", () => {
             });
         expect(registerResponse.statusCode).to.equal(302);
 
-        const loginResponse = await requester.post("/api/login")
+        const loginResponse = await requester.post("/api/sessions/login")
             .send({
                 /* email: "nutellitadivergente@gmail.com",
                 password: "hola" */

@@ -1,10 +1,16 @@
 <h1>Mi Perfil</h1>
 <p>Hola {{user.first_name}} {{user.last_name}}!</p>
-{{#if user.isAdmin}}
-    <p>Rol: Administrador</p>
-{{/if}}
 <p>Email: {{user.email}}</p>
 <p>Edad: {{user.age}}</p>
-<form action="/api/logout" method="POST">
+
+{{#if premium}}
+    <button type="button" class="become-premium-button" data-user-id={{user._id}}>Cancelar Premium</button>
+{{else}}
+    <button type="button" class="become-premium-button" data-user-id={{user._id}}>Volverse Premium</button>
+{{/if}}
+
+<form action="/api/sessions/logout" method="POST">
     <button type="submit">Cerrar Sesión</button>
 </form>
+
+<script src="/js/profile.js" ></script>

@@ -69,7 +69,8 @@ router.get("/products", passport.authenticate("jwt", { session: false, failureRe
             hasNextPage: books.nextPage ? true : false,
             prevLink: books.hasPrevPage ? `/products?page=${books.prevPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
             nextLink: books.hasNextPage ? `/products?page=${books.nextPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
-            user: req.user
+            user: req.user,
+            premium: req.user.role === "premium"
         });
 
     }catch (error){
@@ -154,7 +155,7 @@ router.get("/register", checkAuthenticated, async (req, res) => {
 });
 
 router.get("/profile", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), (req, res) => {
-    res.render("profile", {user: req.user});
+    res.render("profile", {user: req.user, premium: req.user.role === "premium"});
 })
 
 router.get("/mockingproducts", (req, res) => {
