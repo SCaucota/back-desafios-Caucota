@@ -5,8 +5,8 @@ import UserController from "../controllers/userController.js";
 
 const userController = new UserController();
 
-router.put("/users/premium/:uid", userController.cambiarRolPremium)
-router.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put("/premium/:uid", userController.cambiarRolPremium)
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.status(200).json({
         id: req.user._id,
         email: req.user.email,
@@ -17,7 +17,7 @@ router.get('/users', passport.authenticate('jwt', { session: false }), (req, res
         role: req.user.role
     });
 });
-router.delete("/users/:uid", passport.authenticate('jwt', { session: false }), userController.deleteUser);
+router.delete("/:uid", passport.authenticate('jwt', { session: false }), userController.deleteUser);
 
 
 export default router;

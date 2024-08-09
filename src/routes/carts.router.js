@@ -4,13 +4,13 @@ import passport from "passport";
 import CartController from "../controllers/cartController.js";
 const cartController = new CartController();
 
-router.get("/carts/:cid", cartController.getCartProducts);
-router.post("/carts/:cid/purchase", passport.authenticate('jwt', { session: false }), cartController.purchaseCart);
-router.post("/carts", cartController.addCart);
-router.post("/carts/:cid/product/:pid", cartController.addProductToCart);
-router.put("/carts/:cid", cartController.updateProductsInCart);
-router.put("/carts/:cid/product/:pid", cartController.updateAProductInCart);
-router.delete("/carts/:cid/product/:pid", cartController.deleteProductFromCart)
-router.delete("/carts/:cid", cartController.deleteProductsCart);
+router.get("/:cid", cartController.getCartProducts);
+router.post("/:cid/purchase", passport.authenticate('jwt', { session: false }), cartController.purchaseCart);
+router.post("/", cartController.addCart);
+router.post("/:cid/product/:pid", cartController.addProductToCart);
+router.put("/:cid", cartController.updateProductsInCart);
+router.put("/:cid/product/:pid", cartController.updateAProductInCart);
+router.delete("/:cid/product/:pid", cartController.deleteProductFromCart)
+router.delete("/:cid", cartController.deleteProductsCart);
 
 export default router;

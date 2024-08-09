@@ -8,7 +8,7 @@ import viewsRouter from "./routes/views.router.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import sessionsRouter from "./routes/sessions.router.js";
-import usersRouter from "./routes/users.router.js";
+import usersRouter from "./routes/user.router.js";
 
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -51,10 +51,10 @@ app.use(addLogger);
 
 
 app.use("/", viewsRouter);
-app.use("/api", productsRouter);
-app.use("/api", cartsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter)
-app.use("/api", usersRouter);
+app.use("/api/users", usersRouter);
 
 app.use(manejadorError);
 
