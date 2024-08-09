@@ -1,6 +1,5 @@
 import services from "../services/index.js";
 import nodemailer from "nodemailer";
-import twilio from "twilio";
 import configObject from "../config/config.js";
 
 class cartController {
@@ -142,8 +141,6 @@ class cartController {
             }
         })
 
-        const client = twilio(configObject.TWILIO_ACCOUNT_SID, configObject.TWILIO_AUTH_TOKEN);
-
         try {
             const cartId = req.params.cid;
             const userEmail = req.user.email;
@@ -168,11 +165,6 @@ class cartController {
                 };
 
                 await transporter.sendMail(mailOptions);
-                await client.messages.create({
-                    body: `Su compra se realizó exitosamente: ${ticket._id} ¡Muchas gracias por tu compra!`,
-                    from: configObject.TWILIO_SMS_NUMBER,
-                    to: "+543517887437"
-                });
 
                 res.render("checkout", { isEmpty: false, ticketId: ticket._id, unprocessedProducts, cartId });
             }
