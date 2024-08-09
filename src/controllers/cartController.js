@@ -1,9 +1,5 @@
 import services from "../services/index.js";
-import twilio from "twilio";
-import configObject from "../config/config.js";
 import EmailManager from "../services/email.js";
-import swal from "sweetalert2";
-import { SubscribedTrackListInstance } from "twilio/lib/rest/video/v1/room/participant/subscribedTrack.js";
 
 const emailManager = new EmailManager();
 

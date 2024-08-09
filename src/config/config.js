@@ -11,9 +11,6 @@ const configObject = {
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     MAILING_USER: process.env.MAILING_USER,
     MAILING_PASSWORD: process.env.MAILING_PASSWORD,
-    TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
-    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
-    TWILIO_SMS_NUMBER: process.env.TWILIO_SMS_NUMBER,
     LOGGER: process.env.LOGGER
 }
 
