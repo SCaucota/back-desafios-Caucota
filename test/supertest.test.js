@@ -47,7 +47,7 @@ describe("SuperTest", () => {
         expect(statusCode).to.equal(200);
         productTestBody = body;
 
-        const {statusCode: userStatusCode, body: userBody} = await requester.get(`/api/user`).set('Cookie', authToken);
+        const {statusCode: userStatusCode, body: userBody} = await requester.get(`/api/users`).set('Cookie', authToken);
         expect(userStatusCode).to.equal(200);
         console.log(userBody)
         userCartId = userBody.cart._id;
@@ -197,6 +197,6 @@ describe("SuperTest", () => {
         console.log("Deleting product:", productTestBody._id);
         await requester.delete(`/api/products/${productTestBody._id}`);
         console.log("Deleting user:", userId);
-        await requester.delete(`/api/user/${userId}`).set('Cookie', authToken);
+        await requester.delete(`/api/users/${userId}`).set('Cookie', authToken);
     })
 })
