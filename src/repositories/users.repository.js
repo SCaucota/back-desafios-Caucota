@@ -74,6 +74,52 @@ class UserRepository {
         }
 
     }
+
+    async uploadUserDocuments(id, uploadDocs) {
+        try {
+            const user = await UserModel.findById(id);
+
+            if(!user) throw new Error("Usuario no encontrado")
+
+            if(uploadDocs.profile) {
+                user.documents = user.documents.concat(
+                    uploadDocs.profile.map(doc => {
+                        return {
+                            name: doc.originalname.split(".")[0].toLowerCase().replace(/\s+/g, ''),
+                            reference: doc.path
+                        }
+                    })
+                );
+            }
+
+            if(uploadDocs.product) {
+                user.documents = user.documents.concat(
+                    uploadDocs.product.map(doc => {
+                        return {
+                            name: doc.originalname.split(".")[0].toLowerCase().replace(/\s+/g, ''),
+                            reference: doc.path
+                        }
+                    })
+                )
+            }
+
+            if(uploadDocs.document) {
+                user.documents = user.documents.concat(
+                    uploadDocs.document.map(doc => {
+                        return {
+                            name: doc.originalname.split(".")[0].toLowerCase().replace(/\s+/g, ''),
+                            reference: doc.path
+                        }
+                    })
+                )
+            }
+
+            await user.save();
+
+        } catch (error) {
+            throw new Error("Error al cargar los documentos", error);
+        }
+    }
 }
 
 export default UserRepository;

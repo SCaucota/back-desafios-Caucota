@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 const router = express.Router();
 import UserController from "../controllers/userController.js";
+import upload from "../middleware/multer.js";
 
 const userController = new UserController();
 
@@ -18,6 +19,12 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     });
 });
 router.delete("/:uid", passport.authenticate('jwt', { session: false }), userController.deleteUser);
-
+router.post(
+    "/:uid/documents", 
+    upload.fields([
+        {name: "profile", maxCount: 1}, 
+        {name: "product", maxCount: 1} ,
+        {name: "document", maxCount: 3}]), 
+    userController.uploadUserDocuments);
 
 export default router;

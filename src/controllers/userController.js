@@ -22,11 +22,32 @@ class UserController {
                return res.status(404).send("Usuario no encontrado");
            }
 
-           const nuevoRole = user.role === "user" ? "premium" : "user";
+           const documentsName = user.documents.map(document => document.name);
 
-           const actualizado = await services.userService.changeUserRol(uid, nuevoRole)
+           const docsRequired = [ "identificacion", "comprobantedomicilio", "comprobantedeestadodecuenta" ]
 
-           res.json(actualizado)
+           const docs = docsRequired.every(doc => documentsName.includes(doc))
+
+           if(user.role === "premium") {
+                const newRole = user.role = "user";
+
+                const actualizado = await services.userService.changeUserRol(uid, newRole)
+
+                res.json(actualizado)
+
+           }else if(user.role === "user") {
+
+                if(docs) {
+                    const newRole = user.role = "premium";
+
+                    const actualizado = await services.userService.changeUserRol(uid, newRole)
+
+                    res.json(actualizado)
+                }else {
+                    res.status(400).send("Faltan documentos por cargar")
+                }   
+
+           }
 
         } catch (error) {
            res.status(500).send("Error en el servidor" + error)
@@ -47,6 +68,27 @@ class UserController {
             res.status(500).json({error: "Error en el servidor"});
         }
 
+    };
+
+    uploadUserDocuments = async (req, res) => {
+        const userId = req.params.uid;
+        const files = req.files;
+        try {
+
+            if(!userId) {
+                return res.status(404).send("Usuario no encontrado");
+            }
+
+            if(!files) {
+                return res.status(404).send("No se encontraron archivos");
+            }
+
+            await services.userService.uploadUserDocuments(userId, files);
+
+            res.status(200).send({message: "Documentos cargados exitosamente"});
+        } catch (error) {
+            res.status(500).send("Error en el servidor" + error)
+        }
     }
 }
 
