@@ -92,9 +92,9 @@ class UserRepository {
                 );
             }
 
-            if(uploadDocs.product) {
+            if(uploadDocs.products) {
                 user.documents = user.documents.concat(
-                    uploadDocs.product.map(doc => {
+                    uploadDocs.products.map(doc => {
                         return {
                             name: doc.originalname.split(".")[0].toLowerCase().replace(/\s+/g, ''),
                             reference: doc.path
@@ -103,9 +103,9 @@ class UserRepository {
                 )
             }
 
-            if(uploadDocs.document) {
+            if(uploadDocs.documents) {
                 user.documents = user.documents.concat(
-                    uploadDocs.document.map(doc => {
+                    uploadDocs.documents.map(doc => {
                         return {
                             name: doc.originalname.split(".")[0].toLowerCase().replace(/\s+/g, ''),
                             reference: doc.path
@@ -118,6 +118,14 @@ class UserRepository {
 
         } catch (error) {
             throw new Error("Error al cargar los documentos", error);
+        }
+    }
+
+    async updateLastUserConnection(id, lastConnection) {
+        try {
+            return await UserModel.findByIdAndUpdate(id, {last_connection: lastConnection}, {new: true}).lean();
+        } catch (error) {
+            throw new Error("Error al actualizar la última conexión", error);
         }
     }
 }

@@ -93,6 +93,10 @@ class SessionController {
                 httpOnly: true
             });
 
+            const lastConnection = user.last_connection = new Date(Date.now());
+
+            await services.userService.updateLastUserConnection(user._id, lastConnection);
+
             res.redirect("/products");
         } catch (error) {
             res.status(500).send("Error interno del servidor");
@@ -116,10 +120,15 @@ class SessionController {
         }
     }
 
-    logout = (req, res) => {
+    logout = async (req, res) => {
         try {
-            res.clearCookie("coderCookieToken"); 
-            res.redirect("/login");
+            if(req.user) {
+                const user = req.user
+                const lastConnection = user.last_connection = new Date(Date.now());
+                await services.userService.updateLastUserConnection(user._id, lastConnection);
+                res.clearCookie("coderCookieToken"); 
+                res.redirect("/login");
+            }
         } catch (error) {
             res.status(500).send("Error interno del servidor");
         }

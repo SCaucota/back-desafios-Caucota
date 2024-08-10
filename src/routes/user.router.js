@@ -23,8 +23,8 @@ router.post(
     "/:uid/documents", 
     upload.fields([
         {name: "profile", maxCount: 1}, 
-        {name: "product", maxCount: 1} ,
-        {name: "document", maxCount: 3}]), 
+        {name: "products"} ,
+        {name: "documents", maxCount: 3}]), 
     userController.uploadUserDocuments);
 
 export default router;

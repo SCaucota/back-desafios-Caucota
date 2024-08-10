@@ -10,7 +10,7 @@ router.post("/register", sessionController.register);
 router.post("/login", sessionController.login);
 router.get("/github", passport.authenticate("github", { scope: ["user:email"], session: false }));
 router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login", session: false }), sessionController.githubcallback);
-router.post("/logout", sessionController.logout);
+router.post("/logout", passport.authenticate("jwt", {session: false}),sessionController.logout);
 router.get("/admin", passport.authenticate("jwt", {session: false}), sessionController.adminAccess);
 router.post("/requestPasswordReset", sessionController.requestPasswordReset);
 router.post("/resetPassword", sessionController.resetPassword);
