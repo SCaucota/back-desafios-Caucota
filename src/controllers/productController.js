@@ -2,6 +2,9 @@ import services from "../services/index.js";
 import CustomError from "../services/errors/customError.js";
 import { EErrors } from "../services/errors/enum.js";
 import {generateInfoErrorProduct} from "../services/errors/info.js";
+import EmailManager from "../services/email.js";
+
+const emailManager = new EmailManager();
 
 class ProductController {
 
@@ -103,6 +106,14 @@ class ProductController {
     deleteProduct = async (req, res) => {
         try {
             const id = req.params.pid
+            const user = req.user
+
+            const product = await services.productService.getProductById(id);
+
+            if(user.role === "admin" && product.owner !== "admin") {
+                await emailManager.sendEmailPremiumProductDeleted(product.owner, product.title);
+            }
+            
             await services.productService.deleteProduct(id);
 
             req.logger.info(`Producto con ID "${id}" eliminado correctamente`);

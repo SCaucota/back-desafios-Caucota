@@ -121,6 +121,16 @@ class CartRepository {
         }
     }
 
+    async deleteCart(cartId) {
+        try {
+            const deleteCart = await CartModel.findByIdAndDelete(cartId).lean();
+            if (!deleteCart) throw new Error(`Carrito con ID "${cartId}" no encontrado`);
+            return deleteCart;
+        } catch (error) {
+            throw new Error("Error al eliminar el carrito:", error);
+        }
+    }
+
     async deleteProductsCart(cartId) {
         try {
             const cart = await CartModel.findById(cartId);

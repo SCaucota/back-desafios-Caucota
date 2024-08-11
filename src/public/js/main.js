@@ -36,8 +36,23 @@ const renderProductos = (products) => {
     }
 };
 
-const deleteProduct = (id) => {
-    socket.emit("deleteProduct", id);
+const deleteProduct = async(id) => {
+    try {
+        const response = await fetch('/api/products/' + id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        if(!response.ok) {
+            throw new Error("No se pudo borrar el producto");
+        }
+
+        socket.emit("deleteProduct");
+    } catch (error) {
+        console.log("Error al elminar el producto")
+    }
 };
 
 
