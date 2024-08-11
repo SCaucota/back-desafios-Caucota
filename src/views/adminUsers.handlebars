@@ -4,7 +4,7 @@
     {{>card}}
 </div>
 
-
-<a href="" class="btn btn-primary" disabled=true >Eliminar</a>
+<p>Usuarios inactivos: {{inactiveUsers}}</p>
+<button class="btn btn-primary delete-users-button" {{#if usersToDelete}}disabled{{/if}} >Eliminar</button>
 
 <script src="/js/adminUsers.js"></script>

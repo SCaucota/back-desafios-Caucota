@@ -39,3 +39,8 @@ h1{
 .errorPassword{
     color: red;
 }
+
+/*---Card User Inactive---*/
+.inactive{
+    background-color: rgba(255, 0, 0, 0.627);
+}

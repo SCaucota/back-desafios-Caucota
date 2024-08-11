@@ -20,4 +20,23 @@ function becomePremium() {
     })
 }
 
+function deleteInactiveUsers() {
+    const button = document.querySelector(".delete-users-button");
+    button.addEventListener('click', async (event) => {
+        const response = await fetch(`/api/users/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if(response.ok) {
+            window.location.reload();
+        }else{
+            console.log("Error al eliminar usuarios inactivos");
+        }
+    })
+}
+
 becomePremium();
+deleteInactiveUsers();

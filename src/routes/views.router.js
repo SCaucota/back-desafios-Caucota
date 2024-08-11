@@ -97,15 +97,25 @@ router.get("/adminUsers", passport.authenticate("jwt", { session: false, failure
         const twoDaysAgo = new Date(actualDate);
         twoDaysAgo.setDate(actualDate.getDate() - 2)
 
-        const inactiveUsers = users.filter(user => {
+        let usersInactive = [];
+
+        const updatedUsers = users.map(user => {
             const lastConnection = new Date(user.last_connection);
             const isInactive = lastConnection <= twoDaysAgo
-            user = {...user, status: isInactive}
+            if(isInactive) {    
+                const inactiveUser = {...user, isInactive: true}
+                usersInactive.push(inactiveUser)
+                return inactiveUser
+            }else {
+                return user
+            }
         });
 
-        console.log(users)
-
-        res.render("adminUsers", {users: users});
+        res.render("adminUsers", {
+            users: updatedUsers,
+            inactiveUsers: usersInactive.length,
+            usersToDelete: usersInactive.length === 0 ? true : false
+        });
     }catch (error) {
         res.status(500).send("Error interno del servidor");
     }
