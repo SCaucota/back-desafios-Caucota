@@ -92,6 +92,19 @@ router.get("/adminUsers", passport.authenticate("jwt", { session: false, failure
     try{
         const users = await services.userService.getAllUsers();
 
+        const actualDate = new Date();
+        
+        const twoDaysAgo = new Date(actualDate);
+        twoDaysAgo.setDate(actualDate.getDate() - 2)
+
+        const inactiveUsers = users.filter(user => {
+            const lastConnection = new Date(user.last_connection);
+            const isInactive = lastConnection <= twoDaysAgo
+            user = {...user, status: isInactive}
+        });
+
+        console.log(users)
+
         res.render("adminUsers", {users: users});
     }catch (error) {
         res.status(500).send("Error interno del servidor");
