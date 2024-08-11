@@ -1,16 +1,57 @@
-import jwt from "jsonwebtoken";
-import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
-import configObject from "../config/config.js";
 import services from "../services/index.js";
-import { EErrors } from "../services/errors/enum.js";
-import {generateInfoErrorUser} from "../services/errors/info.js";
-import CustomError from "../services/errors/customError.js";
-import generarResetToken from "../utils/tokenreset.js";
 import EmailManager from "../services/email.js";
 
 const emailManager = new EmailManager();
 
 class UserController {
+
+    getAllUsers = async (req, res) => {
+        try {
+            const users = await services.userService.getAllUsers();
+
+            const mainDataUser = users.map(user => {
+                return {
+                    _id: user._id,
+                    name: user.first_name,
+                    surname: user.last_name,
+                    email: user.email,
+                    role: user.role
+                }
+            })
+
+            res.send(mainDataUser)
+        } catch (error) {
+            req.logger.error("Error al traer todos los usuarios" + error);
+            res.status(500).json({error: "Error interno del servidor"})
+        }
+    }
+
+    deleteInactiveUsers = async (req, res) => {
+        try {
+            const users = await services.userService.getAllUsers();
+
+            const actualDate = new Date();
+
+            const twoDaysAgo = new Date(actualDate);
+            twoDaysAgo.setDate(actualDate.getDate() - 2)
+
+            const inactiveUsers = users.filter(user => {
+                const lastConnection = new Date(user.last_connection);
+                return lastConnection <= twoDaysAgo
+            });
+
+            await Promise.all(
+                inactiveUsers.map(async (user) => {
+                    await emailManager.sendEmailDeletedAccountUser(user.email, user.first_name, user.last_name);
+                    await services.userService.deleteUser(user._id)
+                })
+            )
+
+            res.status(200).send("Eliminación de usuarios inactivos exitosa")
+        } catch (error) {
+            res.status(500).send("Error en el servidor" + error)
+        }
+    }
    
    cambiarRolPremium = async (req, res) => {
        const {uid} = req.params;

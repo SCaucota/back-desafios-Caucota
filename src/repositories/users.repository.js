@@ -18,6 +18,16 @@ class UserRepository {
         }
     }
 
+    async getAllUsers() {
+        try {
+            const users = await UserModel.find().lean();
+            const sinAdmin = users.filter(user => user.role !== "admin");
+            return sinAdmin;
+        } catch (error) {
+            throw new Error("Error al buscar todos los usuarios", error);
+        }
+    }
+
     async getUserById(id) {
         try {
             return await UserModel.findById(id).lean();

@@ -88,6 +88,16 @@ router.get("/realtimeproducts", passport.authenticate("jwt", { session: false, f
     res.render("realtimeproducts");
 });
 
+router.get("/adminUsers", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["admin"]), async (req, res) => {
+    try{
+        const users = await services.userService.getAllUsers();
+
+        res.render("adminUsers", {users: users});
+    }catch (error) {
+        res.status(500).send("Error interno del servidor");
+    }
+})
+
 router.get("/products/:pid", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), verifyRol(["user", "premium"]), async (req, res) => {
     const productId = req.params.pid;
     const cartId = req.user.cart._id;

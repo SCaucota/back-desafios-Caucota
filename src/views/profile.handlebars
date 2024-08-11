@@ -3,14 +3,14 @@
 <p>Email: {{user.email}}</p>
 <p>Edad: {{user.age}}</p>
 
-{{#if premium}}
+{{!-- {{#if premium}}
     <button type="button" class="become-premium-button" data-user-id={{user._id}}>Cancelar Premium</button>
 {{else}}
     <button type="button" class="become-premium-button" data-user-id={{user._id}}>Volverse Premium</button>
-{{/if}}
+{{/if}} --}}
 
 <form action="/api/sessions/logout" method="POST">
     <button type="submit">Cerrar Sesión</button>
 </form>
 
-<script src="/js/profile.js" ></script>
+{{!-- <script src="/js/profile.js" ></script> --}}

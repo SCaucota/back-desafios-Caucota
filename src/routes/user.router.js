@@ -6,18 +6,9 @@ import upload from "../middleware/multer.js";
 
 const userController = new UserController();
 
-router.put("/premium/:uid", userController.cambiarRolPremium)
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.status(200).json({
-        id: req.user._id,
-        email: req.user.email,
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        age: req.user.age,
-        cart: req.user.cart,
-        role: req.user.role
-    });
-});
+router.put("/premium/:uid", userController.cambiarRolPremium);
+router.get('/', userController.getAllUsers);
+router.delete('/', userController.deleteInactiveUsers)
 router.delete("/:uid", passport.authenticate('jwt', { session: false }), userController.deleteUser);
 router.post(
     "/:uid/documents", 

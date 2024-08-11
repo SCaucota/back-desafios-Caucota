@@ -1,10 +1,25 @@
-{{#each payload}}
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h2 class="card-title">Título: {{title}}</h2>
-        <p class="card-text">Descripción: {{description}}</p>
-        <p class="card-text">Precio: {{price}}</p>
-        <a href="/products/{{_id}}" class="btn btn-primary seeDetailProduct">Ver</a>
+{{#if payload}}
+    {{#each payload}}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h2 class="card-title">Título: {{title}}</h2>
+            <p class="card-text">Descripción: {{description}}</p>
+            <p class="card-text">Precio: {{price}}</p>
+            <a href="/products/{{_id}}" class="btn btn-primary seeDetailProduct">Ver</a>
+        </div>
     </div>
-</div>
-{{/each}}
+    {{/each}}
+{{else if users}}
+    {{#each users}}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h2 class="card-title">{{first_name}} {{last_name}}</h2>
+            <p class="card-text">ID: {{_id}}</p>
+            <p class="card-text">Email: {{email}}</p>
+            <p class="card-text">Rol: {{role}}</p>
+            <a href="" class="btn btn-primary" disabled=true>Cambiar Rol</a>
+            <a href="" class="btn btn-primary" disabled=true >Eliminar</a>
+        </div>
+    </div>
+    {{/each}}
+{{/if}}

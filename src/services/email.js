@@ -34,6 +34,24 @@ class EmailManager {
         }
     }
 
+    async sendEmailDeletedAccountUser (email, first_name, last_name) {
+        try {
+            const mailOptions = {
+                from: configObject.MAILING_USER,
+                to: email,
+                subject: "Eliminación de cuenta por inactividad",
+                html: `
+                    <h2>${first_name} ${last_name}</h2>
+                    <h2>Debido a su inactividad en nuestro sitio, su cuenta ha sido <strong>Eliminada</strong></h2>
+                    <p>Si desea volver a registrarse, diríjase a la sección de <a href="http://localhost:8080/register">Registrarse</a></p>
+                `
+            };
+            await this.transporter.sendMail(mailOptions)
+        } catch (error) {
+            console.log('Error al enviar el email', error)
+        }
+    }
+
     async enviarCorreoRestablecimiento(email, first_name, token) {  
         try {
             const mailOptions = {
