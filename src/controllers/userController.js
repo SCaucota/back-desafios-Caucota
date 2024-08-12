@@ -32,11 +32,7 @@ class UserController {
 
             const actualDate = new Date();
 
-            const userTest = users.filter(user => user._id === "66b820944eca71ff5ef01f0a")
-
-            console.log(userTest.cart)
-
-            /* const twoDaysAgo = new Date(actualDate);
+            const twoDaysAgo = new Date(actualDate);
             twoDaysAgo.setDate(actualDate.getDate() - 2)
 
             const inactiveUsers = users.filter(user => {
@@ -46,11 +42,25 @@ class UserController {
 
             await Promise.all(
                 inactiveUsers.map(async (user) => {
+                    if(user.role === "premium"){
+                        const allProducts = await services.productService.getProducts();
+                        const productsUser = allProducts.filter(product => product.owner === user.email);
+                        console.log("productsCantUser: ", productsUser.length)
+                        if(productsUser.length > 0) {
+                            await Promise.all(
+                                productsUser.map(async (product) => {
+                                    console.log(product._id)
+                                    await services.productService.deleteProduct(product._id);
+                                })
+                            )
+                        }
+                    }
+                    console.log("Usuario nO PREMIUM")
                     await emailManager.sendEmailDeletedAccountUser(user.email, user.first_name, user.last_name);
-                    await services.cartService.deleteCart(user.cart._id);
+                    await services.cartService.deleteCart(user.cart);
                     await services.userService.deleteUser(user._id)
                 })
-            ) */
+            )
 
             res.status(200).send("Eliminación de usuarios inactivos exitosa")
         } catch (error) {

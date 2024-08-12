@@ -14,7 +14,7 @@ function becomePremium() {
             if(response.ok) {
                 window.location.reload();
             }else{
-                console.log("Error al vaciar el carrito");
+                console.log("Error cambiar rol de usuario");
             }
         })
     })
