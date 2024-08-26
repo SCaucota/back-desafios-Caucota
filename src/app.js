@@ -59,7 +59,7 @@ app.use("/api/users", usersRouter);
 app.use(manejadorError);
 
 const httpServer = app.listen(PUERTO, () => {
-    console.log(`Escuchando en el puerto http//localhost:${PUERTO}`);
+    console.log(`Escuchando en el puerto http://localhost:${PUERTO}`);
 });
 
 const socketManager = new SocketManager(httpServer);
