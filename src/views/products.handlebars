@@ -1,14 +1,4 @@
-<h1>¡Bienvenido/a, {{ user.first_name }}!</h2>
-
-<div>
-    <h3>Nuestros libros: </h3>
-    <a href="/carts/{{user.cart._id}}" class="btn btn-primary">Carrito</a>
-    <a href="/profile" class="btn btn-primary">Perfil</a>
-    {{#if premium}}
-        <a href="/realtimeproducts" class="btn btn-primary">Mis productos</a>
-    {{/if}}
-</div>
-
+{{>header}}
 
 <div id="homeList">
     {{>card}}

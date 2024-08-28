@@ -77,6 +77,7 @@ class UserController {
            if(!user) {
                return res.status(404).send("Usuario no encontrado");
            }
+           console.log(user)
 
            const documentsName = user.documents.map(document => document.name);
 
@@ -100,6 +101,7 @@ class UserController {
 
                     res.json(actualizado)
                 }else {
+                    console.log(documentsName)
                     res.status(400).send("Faltan documentos por cargar")
                 }   
 
@@ -140,6 +142,7 @@ class UserController {
             }
 
             await services.userService.uploadUserDocuments(userId, files);
+            console.log(files)
 
             res.status(200).send({message: "Documentos cargados exitosamente"});
         } catch (error) {

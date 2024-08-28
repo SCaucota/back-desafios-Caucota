@@ -20,6 +20,10 @@ class ViewsController {
                 query.category = req.query.type;
             }
 
+            if(req.query.search) {
+                query.title = { $regex: req.query.search, $options: "i" };
+            }
+
             let sortOptions = {};
             if (req.query.sort && (req.query.sort === "asc" || req.query.sort === "desc")) {
                 sortOptions.price = req.query.sort;
@@ -46,7 +50,7 @@ class ViewsController {
                 prevLink: books.hasPrevPage ? `/products?page=${books.prevPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
                 nextLink: books.hasNextPage ? `/products?page=${books.nextPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
                 user: req.user,
-                premium: req.user.role === "premium"
+                userPremium: req.user.role === "premium"
             });
 
         } catch (error) {
@@ -59,7 +63,7 @@ class ViewsController {
     };
 
     renderRealTimeProducts = async (req, res) => {
-        res.render("realtimeproducts");
+        res.render("realtimeproducts", {active: true});
     }
 
     renderUsers = async (req, res) => {
@@ -130,7 +134,7 @@ class ViewsController {
             if (cartId.toString() !== userCartId.toString()) {
                 return res.render("404")
             } else {
-                res.render("cart", { cart: cart, cartId: cartId });
+                res.render("cart", { cart: cart, cartId: cartId, userPremium: req.user.role === "premium" });
             }
 
         } catch (error) {
@@ -164,7 +168,7 @@ class ViewsController {
     }
 
     renderProfile = async (req, res) => {
-        res.render("profile", { user: req.user, premium: req.user.role === "premium" });
+        res.render("profile", { user: req.user, userPremium: req.user.role === "premium" });
     }
 
     renderMockingProducts = async (req, res) => {
