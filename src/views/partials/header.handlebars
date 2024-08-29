@@ -4,42 +4,65 @@
     <a href="/products" class="navbar-brand" href="#">Bibliomaniacs</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a href="/products" class="nav-link {{#if payload}}active{{/if}}" aria-current="page" href="#">Tienda</a>
-        </li>
-        <li class="nav-item">
-          <a href="/carts/{{user.cart._id}}" class="nav-link {{#if cart}}active{{/if}}" href="#">Carrito</a>
-        </li>
+        {{#if noAdmin}}
+          <li class="nav-item">
+            <a href="/products" class="nav-link {{#if payload}}active{{/if}}" aria-current="page" href="#">Tienda</a>
+          </li>
+        {{/if}}
+        {{#if noAdmin}}
+          <li class="nav-item">
+            <a href="/carts/{{user.cart._id}}" class="nav-link {{#if cart}}active{{/if}}" href="#">Carrito</a>
+          </li>
+        {{/if}}
+        {{#if isAdmin}}
+          <li class="nav-item">
+            <a href="/realtimeproducts" class="nav-link {{#if active}}active{{/if}}" aria-current="page" href="#">Productos</a>
+          </li>
+        {{/if}}
+        {{#if isAdmin}}
+          <li class="nav-item">
+            <a href="/adminUsers" class="nav-link {{#if viewUsersActive}}active{{/if}}" aria-current="page" href="#">Usuarios</a>
+          </li>
+        {{/if}}
+        {{#if noAdmin}}
+          <li class="nav-item">
+            <a href="/chat" class="nav-link {{#if chatActive}}active{{/if}}" href="#">Chat</a>
+          </li>
+        {{/if}}
         {{#if userPremium}}
           <li class="nav-item">
             <a href="/realtimeproducts" class="nav-link {{#if active}}active{{/if}}" href="#">Tus Productos</a>
           </li>
         {{/if}}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Categorías
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/products">Todos los libros</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/products?type=romance">Romance</a></li>
-            <li><a class="dropdown-item" href="/products?type=misterio">Misterio</a></li>
-            <li><a class="dropdown-item" href="/products?type=fantasia">Fantasía</a></li>
-            <li><a class="dropdown-item" href="/products?type=ciencia ficcion">Ciencía Ficción</a></li>
-            <li><a class="dropdown-item" href="/products?type=suspenso">Suspenso</a></li>
-            <li><a class="dropdown-item" href="/products?type=historias de vida">Historias de vida</a></li>
-            <li><a class="dropdown-item" href="/products?type=realismo magico">Realismo Mágico</a></li>
-            <li><a class="dropdown-item" href="/products?type=clasico">Clásico</a></li>
-            <li><a class="dropdown-item" href="/products?type=distopia">Distopía</a></li>
-          </ul>
-        </li>
+        {{#if noAdmin}}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Categorías
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/products">Todos los libros</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/products?type=romance">Romance</a></li>
+              <li><a class="dropdown-item" href="/products?type=misterio">Misterio</a></li>
+              <li><a class="dropdown-item" href="/products?type=fantasia">Fantasía</a></li>
+              <li><a class="dropdown-item" href="/products?type=ciencia ficcion">Ciencía Ficción</a></li>
+              <li><a class="dropdown-item" href="/products?type=suspenso">Suspenso</a></li>
+              <li><a class="dropdown-item" href="/products?type=historias de vida">Historias de vida</a></li>
+              <li><a class="dropdown-item" href="/products?type=realismo magico">Realismo Mágico</a></li>
+              <li><a class="dropdown-item" href="/products?type=clasico">Clásico</a></li>
+              <li><a class="dropdown-item" href="/products?type=distopia">Distopía</a></li>
+            </ul>
+          </li>
+        {{/if}}
       </ul>
     </div>
     <div class="search-profile-container">
-      <form action="/products" class="d-flex" role="search">
-        <input class="form-control me-2" type="search" name="search" placeholder="Ingresar libro" aria-label="Search">
-        <button class="btn btn-outline-light" type="submit">Buscar</button>
-      </form>
+      {{#if noAdmin}}
+        <form action="/products" class="d-flex" role="search">
+          <input class="form-control me-2" type="search" name="search" placeholder="Ingresar libro" aria-label="Search">
+          <button class="btn btn-outline-light" type="submit">Buscar</button>
+        </form>
+      {{/if}}
       <a href="/profile" class="perfil-icon">
         <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1724802754/usuario_jpwpbx.png" alt="profile">
       </a>

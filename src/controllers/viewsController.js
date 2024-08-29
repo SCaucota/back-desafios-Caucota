@@ -50,6 +50,7 @@ class ViewsController {
                 prevLink: books.hasPrevPage ? `/products?page=${books.prevPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
                 nextLink: books.hasNextPage ? `/products?page=${books.nextPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
                 user: req.user,
+                noAdmin: req.user.role !== "admin",
                 userPremium: req.user.role === "premium"
             });
 
@@ -59,11 +60,17 @@ class ViewsController {
     };
 
     renderChat = async (req, res) => {
-        res.render("chat");
+        res.render("chat", {chatActive: true, noAdmin: req.user.role !== "admin", userPremium: req.user.role === "premium"});
     };
 
     renderRealTimeProducts = async (req, res) => {
-        res.render("realtimeproducts", {active: true});
+        res.render("realtimeproducts", {
+            userPremium: req.user.role === "premium", 
+            active: true, 
+            user: req.user, 
+            noAdmin: req.user.role !== "admin",
+            isAdmin: req.user.role === "admin"
+        });
     }
 
     renderUsers = async (req, res) => {
@@ -92,7 +99,9 @@ class ViewsController {
             res.render("adminUsers", {
                 users: updatedUsers,
                 inactiveUsers: usersInactive.length,
-                usersToDelete: usersInactive.length === 0 ? true : false
+                usersToDelete: usersInactive.length === 0 ? true : false,
+                viewUsersActive: true,
+                isAdmin: req.user.role === "admin",
             });
         } catch (error) {
             res.status(500).send("Error interno del servidor");
@@ -113,7 +122,16 @@ class ViewsController {
 
             const quantity = cart.products.find(product => product.product.toString() === productId)?.quantity || 0;
 
-            res.render('product', { product: product, cartId: cartId, quantity: quantity });
+            console.log(req.user)
+
+            res.render('product', { 
+                product: product, 
+                cartId: cartId, 
+                quantity: quantity,
+                noAdmin: req.user.role !== "admin",
+                userPremium: req.user.role === "premium",
+                user: req.user
+            });
         } catch (error) {
             req.logger.error("Error al obtener el producto", error);
             res.status(500).send("Error interno del servidor");
@@ -134,7 +152,7 @@ class ViewsController {
             if (cartId.toString() !== userCartId.toString()) {
                 return res.render("404")
             } else {
-                res.render("cart", { cart: cart, cartId: cartId, userPremium: req.user.role === "premium" });
+                res.render("cart", { cart: cart, cartId: cartId, userPremium: req.user.role === "premium", noAdmin: req.user.role !== "admin" });
             }
 
         } catch (error) {
@@ -168,7 +186,12 @@ class ViewsController {
     }
 
     renderProfile = async (req, res) => {
-        res.render("profile", { user: req.user, userPremium: req.user.role === "premium" });
+        res.render("profile", { 
+            user: req.user, 
+            userPremium: req.user.role === "premium", 
+            noAdmin: req.user.role !== "admin", 
+            isAdmin: req.user.role === "admin" 
+        });
     }
 
     renderMockingProducts = async (req, res) => {
