@@ -3,14 +3,17 @@
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             {{#if noImage}}
-                <p>SIN IMAGEN</p>
+                <div>
+                    <img class="card-img-top" src="/assets/images/cover-sin-imagen.jpeg" alt="{{title}}">
+                    <h4 class="title-cover">{{title}}</h4>
+                </div>
             {{else}}
                 <img src="{{img}}" class="card-img-top" alt="{{title}}">
             {{/if}}
-            <h2 class="card-title">Título: {{title}}</h2>
-            <p class="card-text">Descripción: {{description}}</p>
-            <p class="card-text">Precio: {{price}}</p>
-            <a href="/products/{{_id}}" class="btn btn-primary seeDetailProduct">Ver</a>
+            <h4 class="card-title">{{title}}</h4>
+            <p class="card-text">{{description}}</p>
+            <p class="card-text">${{price}}</p>
+            <a href="/products/{{_id}}" class="btn btn-dark seeDetailProduct">Ver</a>
         </div>
     </div>
     {{/each}}

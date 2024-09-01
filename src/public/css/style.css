@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+
 body{
     margin: 20px;
 }
@@ -191,10 +193,32 @@ h1{
     padding: 1rem;
 }
 
-/*---HOME.HANDLEBARS---*/
-.mensajeBienvenida{
+/*---PRODUCTS.HANDLEBARS---*/
+.card-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     text-align: center;
-    margin-top: 2rem;
+}
+
+.card-title{
+    margin-top: 1rem;
+}
+
+.title-cover{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    display: flex;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-family: "dancing script";
+    text-align: center;
+    color: white;
 }
 
 /*---Manejo de restablecimiento de contraseña--*/

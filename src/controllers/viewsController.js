@@ -32,6 +32,7 @@ class ViewsController {
             query.owner = { $ne: req.user.email };
 
             const books = await ProductModel.paginate(query, { limit, page, sort: sortOptions });
+            
 
             const librosResultadoFinal = books.docs.map(book => {
                 const { _id, img, ...rest } = book.toObject();
@@ -39,9 +40,10 @@ class ViewsController {
                     _id,
                     img,
                     ...rest,
-                    noImage: img === "Sin imagen" // Añade la variable noImage
+                    noImage: img === "Sin imagen"
                 };
             });
+
 
             res.render("products", {
                 status: "success",
@@ -56,8 +58,7 @@ class ViewsController {
                 nextLink: books.hasNextPage ? `/products?page=${books.nextPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
                 user: req.user,
                 noAdmin: req.user.role !== "admin",
-                userPremium: req.user.role === "premium",
-
+                userPremium: req.user.role === "premium"
             });
 
         } catch (error) {
@@ -127,8 +128,6 @@ class ViewsController {
             const cart = req.user.cart
 
             const quantity = cart.products.find(product => product.product.toString() === productId)?.quantity || 0;
-
-            console.log(product.img)
 
             res.render('product', { 
                 product: product, 

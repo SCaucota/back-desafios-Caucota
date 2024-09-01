@@ -56,10 +56,6 @@ class SessionController {
 
     login = async (req, res) => {
         try {
-            /* if (req.cookies.coderCookieToken) {
-                return res.redirect("/profile");
-            } */
-
             const { email, password } = req.body;
 
             if (email === configObject.ADMIN_EMAIL && password === configObject.ADMIN_PASSWORD) {

@@ -1,12 +1,10 @@
 {{>header}}
+
 {{#if withImg}}
   <img src="{{product.img}}" alt="">
 {{else}}
-  <div class="cover">
-    <div class="side-cover"></div>
-    <div class="container-title-cover">
+  <div style="background-color: {{randomColor}};" class="cover">
       <p>{{ product.title }}</p>
-    </div>
   </div>
 {{/if}}
 
