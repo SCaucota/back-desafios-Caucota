@@ -4,14 +4,36 @@
     {{>card}}
 </div>
 
-{{#if hasPrevPage}}
-    <a href="{{prevLink}}">Anterior</a>
-{{/if}}
-
-{{#if hasNextPage}}
-    <a href="{{nextLink}}">Siguiente</a> 
-{{/if}}
-
-<p>Página {{page}} de {{totalPages}} </p>
+<div class="pagination-container">
+    <div class="pagination">
+        {{#if hasPrevPage}}
+            <button>
+                <a href="{{prevLink}}">
+                    <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1725226618/flecha-izquierda_retikt.png" alt="">
+                </a>
+            </button>
+        {{else}}
+            <button disabled>
+                <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1725226618/flecha-izquierda_retikt.png" alt="">
+            </button>
+        {{/if}}
+    </div>
+    
+    <p>Página {{page}} de {{totalPages}} </p>
+    
+    <div class="pagination">
+        {{#if hasNextPage}}
+            <button>
+                <a href="{{nextLink}}">
+                    <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1725226618/flecha-correcta_c8bfo4.png" alt="">
+                </a>
+            </button>
+        {{else}}
+            <button disabled>
+                <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1725226618/flecha-correcta_c8bfo4.png" alt="">
+            </button>
+        {{/if}}
+    </div>
+</div>
 
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>

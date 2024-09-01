@@ -45,17 +45,14 @@ class UserController {
                     if(user.role === "premium"){
                         const allProducts = await services.productService.getProducts();
                         const productsUser = allProducts.filter(product => product.owner === user.email);
-                        console.log("productsCantUser: ", productsUser.length)
                         if(productsUser.length > 0) {
                             await Promise.all(
                                 productsUser.map(async (product) => {
-                                    console.log(product._id)
                                     await services.productService.deleteProduct(product._id);
                                 })
                             )
                         }
                     }
-                    console.log("Usuario nO PREMIUM")
                     await emailManager.sendEmailDeletedAccountUser(user.email, user.first_name, user.last_name);
                     await services.cartService.deleteCart(user.cart);
                     await services.userService.deleteUser(user._id)
@@ -77,7 +74,6 @@ class UserController {
            if(!user) {
                return res.status(404).send("Usuario no encontrado");
            }
-           console.log(user)
 
            const documentsName = user.documents.map(document => document.name);
 
@@ -101,7 +97,6 @@ class UserController {
 
                     res.json(actualizado)
                 }else {
-                    console.log(documentsName)
                     res.status(400).send("Faltan documentos por cargar")
                 }   
 
@@ -115,9 +110,7 @@ class UserController {
     deleteUser = async (req, res) => {
         try {
             const id = req.params.uid;
-            console.log(id)
             const userCartId = req.user.cart._id;
-            console.log(userCartId)
             await services.userService.deleteUser(id);
             await services.cartService.deleteCart(userCartId);
             res.status(200).send({meesage: "Se eliminó exitosamente el usuario"});
@@ -142,7 +135,6 @@ class UserController {
             }
 
             await services.userService.uploadUserDocuments(userId, files);
-            console.log(files)
 
             res.status(200).render("premium");
         } catch (error) {

@@ -10,10 +10,8 @@ class ProductController {
 
     addProduct = async (req, res, next) => {
         try {
-            /* const file = req.file */
             const {title, description, code, price, status, stock, category} = req.body;
             const image = req.file ? `/assets/images/${req.file.filename}` : "Sin imagen"
-            console.log(image)
 
             const parsedPrice = parseFloat(price);
             const parsedStock = parseInt(stock, 10);
@@ -27,8 +25,6 @@ class ProductController {
                 });
             }
 
-            console.log("title: ", title)
-
             const repeatedCode = await services.productService.getProductByCode(code);
 
             if (repeatedCode) {
@@ -39,9 +35,6 @@ class ProductController {
                     code: EErrors.PRODUCT_ALREADY_EXIST
                 })
             };
-
-            /* const imgPath = path.join('/public/assets/images', file.filename);
-            console.log(imgPath) */
 
             const newProduct = await services.productService.addProduct({
                 title, 
@@ -63,7 +56,6 @@ class ProductController {
     getProducts = async (req, res) => {
         try {
             const products = await services.productService.getProducts();
-            console.log(products)
             
             let limit = parseInt(req.query.limit);
 
