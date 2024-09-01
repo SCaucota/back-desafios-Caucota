@@ -30,6 +30,10 @@ h1{
     margin-top: 2rem;
 }
 
+/*---ERROR---*/
+.errorPassword{
+    margin-bottom: 0px;
+}
 /*---PREMIUM.HANDLEBARS---*/
 
 /*---HEADER.HANDLEBARS---*/

@@ -4,10 +4,16 @@
         <div class="form-button-container">
             <form action="/api/sessions/login" method="POST">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required {{#if errorPassword}}value="{{userEmail}}"{{/if}}>
+                {{#if error}}
+                    <p class="errorPassword" class="error"> {{errorUser}} </p>
+                {{/if}}
                 <br>
                 <label for="password">Contraseña:</label>
                 <input type="password" id="password" name="password" required>
+                {{#if errorPassword}}
+                    <p class="errorPassword" class="error"> {{errorMessage}} </p>
+                {{/if}}
                 <br>
                 <button class="btn btn-dark button-login" type="submit">Iniciar Sesión</button>
                 <p>¿Olvidaste tu contraseña? <a href="/resetpassword">Restablecer contraseña</a></p>

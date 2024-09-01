@@ -75,11 +75,11 @@ class SessionController {
             const user = await services.userService.getUserByEmail(email);
 
             if (!user) {
-                return res.status(400).send("El usuario no existe");
+                return res.status(400).render("login", { errorUser: "Usuario inexistente", error: true });
             }
 
             if (!isValidPassword(password, user)) {
-                return res.status(401).send("Contraseña incorrecta");
+                return res.status(401).render("login", { errorMessage: "Contraseña incorrecta", userEmail: user.email, errorPassword: true });
             }
 
             const token = jwt.sign({ email: user.email, first_name: user.first_name, last_name: user.last_name, age: user.age, cart: user.cart, role: user.role }, configObject.JWT_SECRET, { expiresIn: "1h" });
