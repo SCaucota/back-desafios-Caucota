@@ -12,10 +12,10 @@ const storage = multer.diskStorage({
                 break;
             case "documents":
                 destinationFolder = "./src/uploads/documents";
-                break;/* 
-            case "product":
+                break;
+            case "img":
                 destinationFolder = "./src/public/assets/images";
-                break; */
+                break;
             default:
                 break;
         }

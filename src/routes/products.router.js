@@ -7,7 +7,7 @@ const productController = new ProductController();
 
 router.get("/", productController.getProducts);
 router.get("/:pid", productController.getProductById);
-router.post("/", /* upload.single('product'), */ productController.addProduct);
+router.post("/", upload.single('img'), passport.authenticate('jwt', { session: false }), productController.addProduct);
 router.put("/:pid", productController.updateProduct);
 router.delete("/:pid", passport.authenticate('jwt', { session: false }), productController.deleteProduct);
 

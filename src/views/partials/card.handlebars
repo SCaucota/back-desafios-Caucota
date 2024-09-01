@@ -2,6 +2,11 @@
     {{#each payload}}
     <div class="card" style="width: 18rem;">
         <div class="card-body">
+            {{#if noImage}}
+                <p>SIN IMAGEN</p>
+            {{else}}
+                <img src="{{img}}" class="card-img-top" alt="{{title}}">
+            {{/if}}
             <h2 class="card-title">Título: {{title}}</h2>
             <p class="card-text">Descripción: {{description}}</p>
             <p class="card-text">Precio: {{price}}</p>

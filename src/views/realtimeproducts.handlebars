@@ -7,14 +7,13 @@
 <h2>Formulario para agregar productos</h2>
 
 <form id="formAddProduct" method="POST">
-    <input type="text" id="title" name="title" placeholder="Titulo">
-    <input type="text" id="description" name="description" placeholder="Descripcion">
-    <input type="number" id="price" name="price" placeholder="Precio">
-    <input type="text" id="img" name="img" value="Sin Imagen">{{!-- 
-    <input type="file" id="img" name="product" accept="image/*" required>  --}}
-    <input type="text" id="code" name="code" placeholder="Código">
-    <input type="number" id="stock" name="stock" placeholder="Stock">
-    <input type="text" id="category" name="category" placeholder="Categoria">
+    <input type="text" id="title" name="title" placeholder="Titulo" value="testTitle">
+    <input type="text" id="description" name="description" placeholder="Descripcion" value="testDescription">
+    <input type="number" id="price" name="price" placeholder="Precio" value="1234">
+    <input type="file" id="img" name="img" accept="image/*" required> 
+    <input type="text" id="code" name="code" placeholder="Código" value="testCode">
+    <input type="number" id="stock" name="stock" placeholder="Stock" value="1234">
+    <input type="text" id="category" name="category" placeholder="Categoria" value="testCategory">
     <select id="status" name="status">
         <option value="true"> Activo </option>
         <option value="false"> Inactivo </option>

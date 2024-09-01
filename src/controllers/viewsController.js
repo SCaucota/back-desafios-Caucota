@@ -34,9 +34,14 @@ class ViewsController {
             const books = await ProductModel.paginate(query, { limit, page, sort: sortOptions });
 
             const librosResultadoFinal = books.docs.map(book => {
-                const { _id, ...rest } = book.toObject();
-                return { _id, ...rest };
-            })
+                const { _id, img, ...rest } = book.toObject();
+                return {
+                    _id,
+                    img,
+                    ...rest,
+                    noImage: img === "Sin imagen" // Añade la variable noImage
+                };
+            });
 
             res.render("products", {
                 status: "success",
@@ -51,7 +56,8 @@ class ViewsController {
                 nextLink: books.hasNextPage ? `/products?page=${books.nextPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
                 user: req.user,
                 noAdmin: req.user.role !== "admin",
-                userPremium: req.user.role === "premium"
+                userPremium: req.user.role === "premium",
+
             });
 
         } catch (error) {
@@ -122,7 +128,7 @@ class ViewsController {
 
             const quantity = cart.products.find(product => product.product.toString() === productId)?.quantity || 0;
 
-            console.log(req.user)
+            console.log(product.img)
 
             res.render('product', { 
                 product: product, 
@@ -130,7 +136,8 @@ class ViewsController {
                 quantity: quantity,
                 noAdmin: req.user.role !== "admin",
                 userPremium: req.user.role === "premium",
-                user: req.user
+                user: req.user,
+                withImg: product.img !== "Sin imagen"
             });
         } catch (error) {
             req.logger.error("Error al obtener el producto", error);

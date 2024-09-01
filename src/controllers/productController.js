@@ -11,15 +11,17 @@ class ProductController {
     addProduct = async (req, res, next) => {
         try {
             /* const file = req.file */
-            const {title, description, code, price, img, status, stock, category} = req.body;
+            const {title, description, code, price, status, stock, category} = req.body;
+            const image = req.file ? `/assets/images/${req.file.filename}` : "Sin imagen"
+            console.log(image)
 
             const parsedPrice = parseFloat(price);
             const parsedStock = parseInt(stock, 10);
 
-            if (!title || !description || !code || !price || !img || !status || !stock || !category) {
+            if (!title || !description || !code || !price || !status || !stock || !category) {
                 throw CustomError.createError({
                     name: "Producto nuevo",
-                    cause: generateInfoErrorProduct({title, description, code, price, img, status, stock, category}),
+                    cause: generateInfoErrorProduct({title, description, code, price, status, stock, category}),
                     menssage: "Error al crear el producto",
                     code: EErrors.PROUDUCT_VALIDATION_ERROR
                 });
@@ -46,11 +48,11 @@ class ProductController {
                 description, 
                 code, 
                 price: parsedPrice, 
-                img/* : imgPath */, 
+                img: image, 
                 status, 
                 stock: parsedStock, 
                 category
-            });
+            }, req.user);
 
             res.json(newProduct);
         } catch (error) {
@@ -61,6 +63,7 @@ class ProductController {
     getProducts = async (req, res) => {
         try {
             const products = await services.productService.getProducts();
+            console.log(products)
             
             let limit = parseInt(req.query.limit);
 

@@ -3,6 +3,8 @@ import ProductModel from "../models/product.model.js";
 class ProductRepository {
     async addProduct(productsData, user) {
         try {
+            console.log("userRepositoryAdd: ", user)
+            console.log("productsDataRepository: ",productsData)
             if(user && user.role === "premium"){
                 productsData.owner = user.email
             }
@@ -18,9 +20,12 @@ class ProductRepository {
 
     async getProducts(user) {
         try {
+            console.log("userRepository: ", user)
             if(user && user.role === "premium"){
+                console.log("pasa por premium repository")
                 return await ProductModel.find({owner: user.email }).lean()
             }else{
+                console.log("Pasa por NOOO premium repository")
                 return await ProductModel.find().lean();
             }
         } catch (error) {

@@ -1,8 +1,18 @@
 {{>header}}
+{{#if withImg}}
+  <img src="{{product.img}}" alt="">
+{{else}}
+  <div class="cover">
+    <div class="side-cover"></div>
+    <div class="container-title-cover">
+      <p>{{ product.title }}</p>
+    </div>
+  </div>
+{{/if}}
+
 <h1>{{ product.title }}</h1>
 <p><strong>Description:</strong> {{ product.description }}</p>
 <p><strong>Price:</strong> {{ product.price }}</p>
-<p><strong>Image:</strong> {{product.img}} </p>
 <p><strong>Status:</strong> {{ product.status }}</p>
 <p><strong>Stock:</strong> {{ product.stock }}</p>
 <p><strong>Category:</strong> {{ product.category }}</p>
