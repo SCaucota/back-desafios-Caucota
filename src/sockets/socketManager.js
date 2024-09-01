@@ -39,17 +39,6 @@ class SocketManager {
                 }
             });
 
-            /* socket.on("deleteProduct", async (id) => {
-                try {
-                    const { user } = socket.request;
-                    await services.productService.deleteProduct(id);
-                    socket.emit("products", await services.productService.getProducts(user));
-                } catch (error) {
-                    console.error("Error al obtener los productos:", error);
-                    socket.emit("error", "Error al obtener los productos");
-                }
-            }); */
-
             socket.on("deleteProduct", async () => {
                 try {
                     const { user } = socket.request;

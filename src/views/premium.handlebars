@@ -1,0 +1,28 @@
+<h1>Poceso de cambio a Premium</h1>
+
+<h3>Para volverse premium debe cumplir con los siguientes requisitos</h3>
+{{#if withoutDocuments}}
+    <form id="formDocuments" method="POST" action="/api/users/{{user._id}}/documents" enctype="multipart/form-data">
+        <label for="profile">Foto de Perfil</label>
+        <input type="file" name="profile" id="profile" required>
+        
+        <label for="products">Cargar Producto</label>
+        <input type="file" name="products" id="products" required>
+        
+        <label for="documents">Identificación</label>
+        <input type="file" name="documents" id="documents" required>
+        
+        <label for="documents">Comprobante de Estado de Cuenta</label>
+        <input type="file" name="documents" id="documents" required>
+        
+        <label for="documents">Comprobante de domicilio</label>
+        <input type="file" name="documents" id="documents" required>
+        
+        <button class="btn-upload-documents" data-user="{{user._id}}" type="submit">Subir Documentos</button>
+    </form>
+{{/if}}
+{{#if withDocuments}}
+    <h2>¡Genial! Haz subido correctamente los archivos</h2>
+    <p>Ahora debe esperar a que el administrador verifique sus datos y cambie su Rol</p>
+    <p>En breve será informado si el cambio fue exitoso</p>
+{{/if}}

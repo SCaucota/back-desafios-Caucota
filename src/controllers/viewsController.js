@@ -101,7 +101,7 @@ class ViewsController {
                 inactiveUsers: usersInactive.length,
                 usersToDelete: usersInactive.length === 0 ? true : false,
                 viewUsersActive: true,
-                isAdmin: req.user.role === "admin",
+                isAdmin: req.user.role === "admin"
             });
         } catch (error) {
             res.status(500).send("Error interno del servidor");
@@ -175,6 +175,14 @@ class ViewsController {
         catch (error) {
             res.status(500).send("Error interno del servidor");
         }
+    }
+
+    renderPremium = async (req, res) => {
+        res.render("premium", {
+            user: req.user, 
+            withoutDocuments: req.user.docuements.length === 0,
+            withDocuments: req.user.documents.length !== 0,
+        });
     }
 
     renderLogin = async (req, res) => {

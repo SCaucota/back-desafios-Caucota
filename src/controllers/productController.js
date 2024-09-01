@@ -10,6 +10,7 @@ class ProductController {
 
     addProduct = async (req, res, next) => {
         try {
+            /* const file = req.file */
             const {title, description, code, price, img, status, stock, category} = req.body;
 
             const parsedPrice = parseFloat(price);
@@ -24,6 +25,8 @@ class ProductController {
                 });
             }
 
+            console.log("title: ", title)
+
             const repeatedCode = await services.productService.getProductByCode(code);
 
             if (repeatedCode) {
@@ -35,7 +38,19 @@ class ProductController {
                 })
             };
 
-            const newProduct = await services.productService.addProduct({title, description, code, price: parsedPrice, img, status, stock: parsedStock, category});
+            /* const imgPath = path.join('/public/assets/images', file.filename);
+            console.log(imgPath) */
+
+            const newProduct = await services.productService.addProduct({
+                title, 
+                description, 
+                code, 
+                price: parsedPrice, 
+                img/* : imgPath */, 
+                status, 
+                stock: parsedStock, 
+                category
+            });
 
             res.json(newProduct);
         } catch (error) {

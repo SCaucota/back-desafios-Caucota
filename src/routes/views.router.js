@@ -78,6 +78,7 @@ router.get(
     passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
     viewsController.renderProfile
 );
+router.get("/premium", passport.authenticate("jwt", { session: false, failureRedirect: "/login" }), viewsController.renderPremium);
 router.get("/mockingproducts", viewsController.renderMockingProducts);
 router.get("/loggerTest", viewsController.renderLoggerTest);
 router.get("/resetpassword", viewsController.renderResetPassword);

@@ -144,7 +144,7 @@ class UserController {
             await services.userService.uploadUserDocuments(userId, files);
             console.log(files)
 
-            res.status(200).send({message: "Documentos cargados exitosamente"});
+            res.status(200).render("premium");
         } catch (error) {
             res.status(500).send("Error en el servidor" + error)
         }

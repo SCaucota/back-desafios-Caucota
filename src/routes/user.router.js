@@ -11,7 +11,8 @@ router.get('/', userController.getAllUsers);
 router.delete('/', userController.deleteInactiveUsers)
 router.delete("/:uid", passport.authenticate('jwt', { session: false }), userController.deleteUser);
 router.post(
-    "/:uid/documents", 
+    "/:uid/documents",
+    passport.authenticate('jwt', { session: false }),
     upload.fields([
         {name: "profile", maxCount: 1}, 
         {name: "products"} ,

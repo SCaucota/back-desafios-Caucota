@@ -10,7 +10,7 @@ const renderProductos = (products) => {
     const productsContainer = document.getElementById("productsContainer");
     productsContainer.innerHTML = "";
 
-    if(products.length !== 0){
+    if (products.length !== 0) {
 
         products.forEach(item => {
             const card = document.createElement("div");
@@ -29,14 +29,14 @@ const renderProductos = (products) => {
                 deleteProduct(item._id);
             });
         });
-    }else {
+    } else {
         const messageWithoutProducts = document.createElement("p");
         messageWithoutProducts.textContent = "Todavía no has agregado ningún producto"
         productsContainer.appendChild(messageWithoutProducts)
     }
 };
 
-const deleteProduct = async(id) => {
+const deleteProduct = async (id) => {
     try {
         const response = await fetch('/api/products/' + id, {
             method: 'DELETE',
@@ -45,7 +45,7 @@ const deleteProduct = async(id) => {
             }
         })
 
-        if(!response.ok) {
+        if (!response.ok) {
             throw new Error("No se pudo borrar el producto");
         }
 
@@ -54,7 +54,6 @@ const deleteProduct = async(id) => {
         console.log("Error al elminar el producto")
     }
 };
-
 
 
 const addProduct = () => {
@@ -68,6 +67,7 @@ const addProduct = () => {
         stock: document.getElementById("stock").value,
         category: document.getElementById("category").value
     };
+
     socket.emit("addProduct", product);
 };
 

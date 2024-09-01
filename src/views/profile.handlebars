@@ -7,3 +7,8 @@
 <form action="/api/sessions/logout" method="POST">
     <button type="submit">Cerrar Sesión</button>
 </form>
+{{#if noAdmin}}
+    <form action="/premium" method="GET">
+        <button type="submit">Volverse Premium</button>
+    </form>
+{{/if}}

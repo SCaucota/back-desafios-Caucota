@@ -17,7 +17,14 @@
             <p class="card-text">ID: {{_id}}</p>
             <p class="card-text">Email: {{email}}</p>
             <p class="card-text">Rol: {{role}}</p>
-            <button class="btn btn-primary become-premium-button" data-user-id={{_id}} {{#if isInactive}}disabled{{/if}}>Cambiar Rol</button>
+            <p class="card-text">Documentos: 
+                {{#if documents}}
+                    Subidos
+                {{else}}
+                    Sin Documentos
+                {{/if}}
+            </p>
+            <button class="btn btn-primary become-premium-button" data-user-id={{_id}} {{#unless documents}}disabled{{/unless}}>Cambiar Rol</button>
         </div>
     </div>
     {{/each}}
