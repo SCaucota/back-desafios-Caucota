@@ -58,7 +58,8 @@ class ViewsController {
                 nextLink: books.hasNextPage ? `/products?page=${books.nextPage}&limit=${limit}&sort=${req.query.sort || ''}&type=${req.query.type || ''}` : null,
                 user: req.user,
                 noAdmin: req.user.role !== "admin",
-                userPremium: req.user.role === "premium"
+                userPremium: req.user.role === "premium",
+                noResults: librosResultadoFinal.length === 0,
             });
 
         } catch (error) {
@@ -136,7 +137,8 @@ class ViewsController {
                 noAdmin: req.user.role !== "admin",
                 userPremium: req.user.role === "premium",
                 user: req.user,
-                withImg: product.img !== "Sin imagen"
+                withImg: product.img !== "Sin imagen",
+                withoutStock: product.stock === 0 ? true : false
             });
         } catch (error) {
             req.logger.error("Error al obtener el producto", error);

@@ -57,31 +57,24 @@ const deleteProduct = async (id) => {
 
 
 const addProduct = async () => {
-    console.log("Pasa por el addProductMain2");
     const formData = new FormData();
     formData.append('title', document.getElementById("title").value);
     formData.append('description', document.getElementById("description").value);
     formData.append('code', document.getElementById("code").value);
     formData.append('price', document.getElementById("price").value);
-    formData.append('img', document.getElementById("img").files[0]); // Archivos deben ser añadidos como archivos binarios
+    formData.append('img', document.getElementById("img").files[0]);
     formData.append('status', document.getElementById("status").value);
     formData.append('stock', document.getElementById("stock").value);
     formData.append('category', document.getElementById("category").value);
-    
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-    }
-
     try {
         const response = await fetch('/api/products', {
             method: 'POST',
-            body: formData,  // Enviar FormData
+            body: formData,
         });
 
         if (!response.ok) {
             throw new Error("No se pudo agregar el producto");
         }
-        console.log("Producto añadido, emitiendo evento addProduct");
         socket.emit("addProduct");
     } catch (error) {
         console.log("Error al eliminar el producto", error);

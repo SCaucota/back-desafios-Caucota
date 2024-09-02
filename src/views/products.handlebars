@@ -1,8 +1,14 @@
 {{>header}}
 
-<div id="homeList">
-    {{>card}}
-</div>
+{{#if noResults}}
+    <div id="homeEmpty">
+        <h4>No se han encontrado coincidencias</h4>
+    </div>
+{{else}}
+    <div id="homeList">
+        {{>card}}
+    </div>
+{{/if}}
 
 <div class="pagination-container">
     <div class="pagination">

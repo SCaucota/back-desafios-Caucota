@@ -51,10 +51,7 @@ class SocketManager {
 
             socket.on("addProduct", async () => {
                 try {
-                    const { user } = socket.request;/* 
-                    const { title, description, code, price, img, status, stock, category } = product;
-                    await services.productService.addProduct({ title, description, code, price, img, status, stock, category }, user); */
-                    console.log("socketManager")
+                    const { user } = socket.request;
                     socket.emit("products", await services.productService.getProducts(user));
                 } catch (error) {
                     console.error("Error al obtener los productos:", error);

@@ -1,26 +1,55 @@
 {{>header}}
 
-{{#if withImg}}
-  <img src="{{product.img}}" alt="">
-{{else}}
-  <div style="background-color: {{randomColor}};" class="cover">
-      <p>{{ product.title }}</p>
+<section id="product-detail-section">
+  <div class="card mb-3" style="max-width: 750px;">
+    <div class="row g-0">
+      {{#if withImg}}
+      <div class="col-md-4">
+        <img class="img-fluid rounded-start" src="{{product.img}}" alt="">
+      </div>
+      {{else}}
+      <div class="col-md-4 container-cover-product">
+        <img class="img-fluid rounded-start" src="/assets/images/cover-sin-imagen.jpeg" alt="">
+        <h4 class="title-cover-product">{{ product.title }}</h4>
+      </div>
+      {{/if}}
+
+      <div class="col-md-8 card-body-product-container">
+        <div class="card-body card-body-product">
+          <h4 class="card-title card-title-product">{{ product.title }}</h4>
+          <p class="card-text card-text-product"><strong>Descripción:</strong> {{ product.description }}</p>
+          <p class="card-text card-text-product"><strong>Precio:</strong> ${{ product.price }}</p>
+          <p class="card-text card-text-product"><strong>Stock:</strong> {{ product.stock }}</p>
+          <p class="card-text card-text-product"><strong>Categoría:</strong> {{ product.category }}</p>
+          <form action="/api/carts/{{cartId}}/product/{{product._id}}" method="post">
+            <div class="input-group mb-3">
+              <input 
+                type="number"
+                class="form-control"
+                aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default"
+                id="quantity"
+                name="quantity"
+                min="1"
+                value={{quantity}}
+                {{#if withoutStock}}disabled{{/if}}
+                required
+              >  
+              <button 
+                class="btn btn-dark" 
+                type="submit" 
+                class="input-group-text" 
+                id="inputGroup-sizing-default" 
+                {{#if withoutStock}}disabled{{/if}}
+              >Agregar al carrito</button type="submit">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-{{/if}}
 
-<h1>{{ product.title }}</h1>
-<p><strong>Description:</strong> {{ product.description }}</p>
-<p><strong>Price:</strong> {{ product.price }}</p>
-<p><strong>Status:</strong> {{ product.status }}</p>
-<p><strong>Stock:</strong> {{ product.stock }}</p>
-<p><strong>Category:</strong> {{ product.category }}</p>
-<form action="/api/carts/{{cartId}}/product/{{product._id}}" method="post">
-  <label for="quantity">Cantidad:</label>
-  <input type="number" id="quantity" name="quantity" min="1" value={{quantity}} required>
-  <button type="submit" class="btn btn-primary">Agregar al carrito</button>
-</form>
-<a href="/products">Back to Products</a>
-
-{{#if error}}
+  {{#if error}}
   <p class="errorPassword">{{error}}</p>
-{{/if}}
+  {{/if}}
+</section>

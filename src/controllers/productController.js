@@ -3,6 +3,8 @@ import CustomError from "../services/errors/customError.js";
 import { EErrors } from "../services/errors/enum.js";
 import {generateInfoErrorProduct} from "../services/errors/info.js";
 import EmailManager from "../services/email.js";
+import fs from 'fs';
+import path from "path";
 
 const emailManager = new EmailManager();
 
@@ -119,6 +121,15 @@ class ProductController {
             const user = req.user
 
             const product = await services.productService.getProductById(id);
+
+            if (product.img) {
+                const imagePath = path.join('src/public', product.img);
+                fs.unlink(imagePath, (err) => {
+                    if (err) {
+                        req.logger.error(`Error al eliminar la imagen: ${err}`);
+                    }
+                });
+            }
 
             if(user.role === "admin" && product.owner !== "admin") {
                 await emailManager.sendEmailPremiumProductDeleted(product.owner, product.title);
