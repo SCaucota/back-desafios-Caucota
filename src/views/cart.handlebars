@@ -15,25 +15,26 @@
         <h6>Cantidad</h6>
         <h6></h6>
       </div>
-      <div class="product">
         {{#each cart.products}}
-          <h5>{{ product.title }}</h5>
-          <p>{{ product.description }}</p>
-          <p>${{ product.price }}</p>
-          <p>{{ product.stock }}</p>
-          <p>{{ product.category }}</p>
-          <h5>{{quantity}}</h5>
-          <div>
-            <button class="btn btn-danger delete-button" data-cart-id="{{../cartId}}" data-product-id="{{product._id}}" data-product-quantity="{{quantity}}" data-product-price="{{product.price}}">Eliminar</button>
+          <div class="product" data-product-id="{{product._id}}">
+            <h5>{{ product.title }}</h5>
+            <p>{{ product.description }}</p>
+            <p>${{ product.price }}</p>
+            <p>{{ product.stock }}</p>
+            <p>{{ product.category }}</p>
+            <h5>{{quantity}}</h5>
+            <div>
+              <button class="btn btn-danger delete-button" data-cart-id="{{../cartId}}" data-product-id="{{product._id}}" data-product-quantity="{{quantity}}" data-product-price="{{product.price}}">Eliminar</button>
+            </div>
           </div>
         {{/each}}
+      </div>
         <div class="total-container">
           <h5>
             <strong>Total: $</strong>
             <strong class="total">{{cart.total}}</strong>
           </h5>
         </div>
-      </div>
     </div>
     <div class="buttons-cart-container">
       <form action="/api/carts/{{cartId}}/purchase" method="post">

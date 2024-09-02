@@ -17,7 +17,8 @@ function eliminarProducto() {
             });
 
             if(response.ok) {
-                event.target.parentElement.remove();
+                const productRow = event.target.closest('.product');
+                productRow.remove();
                 const newTotal = parseInt(total.textContent) - parseInt(quantity * price);
                 total.textContent = newTotal;
                 const remainingProducts = document.querySelectorAll('.product');

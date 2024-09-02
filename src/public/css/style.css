@@ -363,13 +363,81 @@ h1{
 }
 
 .total-container{
-    grid-column: span 7;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid rgb(197 189 189);
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.total-container h5{
+    margin-bottom: 0rem;
 }
 
 .buttons-cart-container{
     display: flex;
     justify-content: center;
     gap: 2rem;
+}
+
+/*---PROFILE-HANDLEBARS---*/
+
+#section-profile{
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.profile-container{
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.profile-container h4{
+    background-color: black;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.profile-container div{
+    padding: 1rem;
+}
+
+.title-data{
+    display: flex;
+    justify-content: space-between;
+}
+
+.email-data{
+    border-bottom: 1px solid black;
+}
+
+.btn-premium{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-premium img{
+    height: 25px;
+    width: 25px;
+}
+
+.button-in-profile{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.forms-button-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem
 }
 
 /*---Manejo de restablecimiento de contraseña--*/

@@ -1,14 +1,29 @@
 {{>header}}
-<h1>Mi Perfil</h1>
-<p>Hola {{user.first_name}} {{user.last_name}}!</p>
-<p>Email: {{user.email}}</p>
-<p>Edad: {{user.age}}</p>
-
-<form action="/api/sessions/logout" method="POST">
-    <button type="submit">Cerrar Sesión</button>
-</form>
-{{#if noAdmin}}
-    <form action="/premium" method="GET">
-        <button type="submit">Volverse Premium</button>
-    </form>
-{{/if}}
+<section id="section-profile">
+    <div class="profile-container" style="width: 25rem;">
+        <h4>{{user.first_name}} {{user.last_name}}</h4>
+        <div>
+            <div class="title-data email-data">
+                <p>Email:</p>
+                <p>{{user.email}}</p>
+            </div>
+            <div class="title-data">
+                <p>Edad:</p>
+                <p>{{user.age}} años</p>
+            </div>
+            <div class="forms-button-container">
+                <form action="/api/sessions/logout" method="POST">
+                    <button class="btn btn-dark button-in-profile" type="submit">Cerrar Sesión</button>
+                </form>
+                {{#if noAdmin}}
+                    <form action="/premium" method="GET">
+                        <button class="btn btn-warning btn-premium button-in-profile" type="submit">
+                            <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1725258192/corona_siprr5.png" alt="">
+                            Volverse Premium
+                        </button>
+                    </form>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</section>
