@@ -4,15 +4,21 @@
         <div class="form-button-container">
             <form action="/api/sessions/login" method="POST">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required {{#if errorPassword}}value="{{userEmail}}"{{/if}}>
+                <input class="email-login" type="email" id="email" name="email" required {{#if errorPassword}}value="{{userEmail}}" {{/if}}>
                 {{#if error}}
-                    <p class="errorPassword" class="error"> {{errorUser}} </p>
+                <p class="errorPassword" class="error"> {{errorUser}} </p>
                 {{/if}}
                 <br>
                 <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
+                <div class="input-group mb-3 password-container">
+                    <input type="password" class="form-control" id="password" name="password"
+                        aria-label="Recipient's username" aria-describedby="button-addon2" required>
+                    <button class="btn btn-light btn-password" type="button" id="button-password">
+                        <img class="eye-login-password" src="/assets/icons/ojo.png" alt="ver-contraseña">
+                    </button>
+                </div>
                 {{#if errorPassword}}
-                    <p class="errorPassword" class="error"> {{errorMessage}} </p>
+                <p class="errorPassword" class="error"> {{errorMessage}} </p>
                 {{/if}}
                 <br>
                 <button class="btn btn-dark button-login" type="submit">Iniciar Sesión</button>
@@ -21,12 +27,16 @@
             <div class="button-container">
                 <p>Otras formas de ingresar:</p>
                 <a class="btn btn-dark github-button" href="/api/sessions/github">
-                    <img class="github-icon" src="https://res.cloudinary.com/dyktfxjer/image/upload/v1724647559/github_2_uzwgxe.png" alt="github">
+                    <img class="github-icon"
+                        src="https://res.cloudinary.com/dyktfxjer/image/upload/v1724647559/github_2_uzwgxe.png"
+                        alt="github">
                     Github
                 </a>
             </div>
         </div>
-        
+
         <p>Si no tienes un usuario, puedes <a href="/register">registrarte</a></p>
     </div>
 </section>
+
+<script src="/js/password.js"></script>
