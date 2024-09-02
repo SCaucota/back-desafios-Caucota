@@ -20,7 +20,7 @@ const renderProductos = (products) => {
                                     <p class="card-title"> ID: ${item._id}</p>
                                     <h2 class="card-title"> Titulo: ${item.title}</h2>
                                     <p class="card-text"> Precio: ${item.price} </p>
-                                    <button class="btn btn-primary">Eliminar</button>
+                                    <button class="btn btn-danger btn-delete-product">Eliminar</button>
                                 </div>
                             `
             productsContainer.appendChild(card);

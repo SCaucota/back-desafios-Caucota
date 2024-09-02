@@ -13,12 +13,12 @@ const emailManager = new EmailManager();
 class SessionController {
     register = async (req, res, next) => {
         try {
-            const { first_name, last_name, email, age } = req.body;
+            const { first_name, last_name, email, age, username } = req.body;
 
             if(!first_name || !last_name || !email || !age) {
                 throw CustomError.createError({
                     name: "Registro Usuario",
-                    cause: generateInfoErrorUser({first_name, last_name, email, age}),
+                    cause: generateInfoErrorUser({first_name, last_name, email, age, username}),
                     mensage: "Error en el registro. El usuario tiene algunos datos incompletos ",
                     code: EErrors.USER_REGISTER_ERROR
                 })
@@ -27,21 +27,41 @@ class SessionController {
             const existedUser = await services.userService.getUserByEmail(email);
 
             if (existedUser) {
-                throw CustomError.createError({
-                    name: "Email duplicado",
-                    cause: `El email: ${email} ya está en uso`,
-                    message: "Usuario duplicado",
-                    code: EErrors.USER_ALREADY_EXIST
+                res.status(400).render("register", {
+                    dataRegistration: {
+                        first_name,
+                        last_name,
+                        username,
+                        age
+                    },
+                    errorEmail: true,
+                    errorEmailMessage: "El email ya se encuentra registrado" 
+                })
+            }
+
+            const existedUserName = await services.userService.getUserByUserName(username);
+
+            if (existedUserName) {
+                console.log(existedUserName)
+                res.status(400).render("register", {
+                    dataRegistration: {
+                        first_name,
+                        last_name,
+                        email,
+                        age
+                    },
+                    errorUserName: true,
+                    errorUserNameMessage: "El nombre de usuario ya se encuentra registrado"
                 })
             }
 
             const newCartId = await services.cartService.addCart();
 
-            const newUser = { first_name, last_name, email, age, password: createHash(req.body.password), cart: newCartId};
+            const newUser = { first_name, last_name, email, age, username, password: createHash(req.body.password), cart: newCartId};
 
             await services.userService.createUser(newUser);
 
-            const token = jwt.sign({ email: newUser.email, first_name: newUser.first_name, last_name: newUser.last_name, age: newUser.age, cart: newUser.cart }, configObject.JWT_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign({ email: newUser.email, first_name: newUser.first_name, last_name: newUser.last_name, age: newUser.age, username: newUser.username, cart: newUser.cart }, configObject.JWT_SECRET, { expiresIn: "1h" });
 
             res.cookie("coderCookieToken", token, {
                 maxAge: 3600000,

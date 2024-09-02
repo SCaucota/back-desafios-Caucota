@@ -1,57 +1,59 @@
 {{>header}}
 
-{{#if cart.products}}
-  <div class="cart-button-container">
-    <div class="cart-container">
-      <div class="header-cart">
-        <h6>Compra en proceso</h6>
-      </div>
-      <div class="header-data">
-        <h6>Titulo</h6>
-        <h6>Descripción</h6>
-        <h6>Precio</h6>
-        <h6>Stock</h6>
-        <h6>Categoría</h6>
-        <h6>Cantidad</h6>
-        <h6></h6>
-      </div>
-        {{#each cart.products}}
-          <div class="product" data-product-id="{{product._id}}">
-            <h5>{{ product.title }}</h5>
-            <p>{{ product.description }}</p>
-            <p>${{ product.price }}</p>
-            <p>{{ product.stock }}</p>
-            <p>{{ product.category }}</p>
-            <h5>{{quantity}}</h5>
-            <div>
-              <button class="btn btn-danger delete-button" data-cart-id="{{../cartId}}" data-product-id="{{product._id}}" data-product-quantity="{{quantity}}" data-product-price="{{product.price}}">Eliminar</button>
-            </div>
-          </div>
-        {{/each}}
-      </div>
-        <div class="total-container">
-          <h5>
-            <strong>Total: $</strong>
-            <strong class="total">{{cart.total}}</strong>
-          </h5>
+<section id="section-cart">
+  {{#if cart.products}}
+    <div class="cart-button-container">
+      <div class="cart-container">
+        <div class="header-cart">
+          <h6>Compra en proceso</h6>
         </div>
+        <div class="header-data">
+          <h6>Titulo</h6>
+          <h6>Descripción</h6>
+          <h6>Precio</h6>
+          <h6>Stock</h6>
+          <h6>Categoría</h6>
+          <h6>Cantidad</h6>
+          <h6></h6>
+        </div>
+          {{#each cart.products}}
+            <div class="product" data-product-id="{{product._id}}">
+              <h5>{{ product.title }}</h5>
+              <p>{{ product.description }}</p>
+              <p>${{ product.price }}</p>
+              <p>{{ product.stock }}</p>
+              <p>{{ product.category }}</p>
+              <h5>{{quantity}}</h5>
+              <div>
+                <button class="btn btn-danger delete-button" data-cart-id="{{../cartId}}" data-product-id="{{product._id}}" data-product-quantity="{{quantity}}" data-product-price="{{product.price}}">Eliminar</button>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+          <div class="total-container">
+            <h5>
+              <strong>Total: $</strong>
+              <strong class="total">{{cart.total}}</strong>
+            </h5>
+          </div>
+      </div>
+      <div class="buttons-cart-container">
+        <form action="/api/carts/{{cartId}}/purchase" method="post">
+          <button type="submit" class="btn btn-dark">Comprar</button>
+        </form>
+        <button class="btn btn-danger empty-button" data-cart-id={{cartId}}>Vaciar Carrito</button>
+      </div>
     </div>
-    <div class="buttons-cart-container">
-      <form action="/api/carts/{{cartId}}/purchase" method="post">
-        <button type="submit" class="btn btn-dark">Comprar</button>
-      </form>
-      <button class="btn btn-danger empty-button" data-cart-id={{cartId}}>Vaciar Carrito</button>
+  
+    <script src="/js/cart.js"></script>
+  {{else}}
+    <div class="no-product-container">
+      <div class="no-products">
+        <h4>No hay productos en el carrito</h4>
+        <p>Vuelve a la tienda para agregar productos</p>
+      </div>
     </div>
-  </div>
-
-  <script src="/js/cart.js"></script>
-{{else}}
-  <div class="no-product-container">
-    <div class="no-products">
-      <h4>No hay productos en el carrito</h4>
-      <p>Vuelve a la tienda para agregar productos</p>
-    </div>
-  </div>
-{{/if}}
+  {{/if}}
+</section>
 
 

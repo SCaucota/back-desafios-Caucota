@@ -1,7 +1,7 @@
 {{#if payload}}
     {{#each payload}}
     <div class="card" style="width: 18rem;">
-        <div class="card-body">
+        <div class="card-body card-body-products">
             {{#if noImage}}
                 <div>
                     <img class="card-img-top" src="/assets/images/cover-sin-imagen.jpeg" alt="{{title}}">
@@ -32,7 +32,7 @@
                     Sin Documentos
                 {{/if}}
             </p>
-            <button class="btn btn-primary become-premium-button" data-user-id={{_id}} {{#unless documents}}disabled{{/unless}}>Cambiar Rol</button>
+            <button class="btn btn-dark become-premium-button" data-user-id={{_id}} {{#unless documents}}disabled{{/unless}}>Cambiar Rol</button>
         </div>
     </div>
     {{/each}}

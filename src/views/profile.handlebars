@@ -2,6 +2,11 @@
 <section id="section-profile">
     <div class="profile-container" style="width: 25rem;">
         <h4>{{user.first_name}} {{user.last_name}}</h4>
+        {{#if userPremium}}
+        <div class="premium-div-profile">
+            <h5>Usuario Premium</h5>
+        </div>
+        {{/if}}
         <div>
             <div class="title-data email-data">
                 <p>Email:</p>
@@ -16,12 +21,15 @@
                     <button class="btn btn-dark button-in-profile" type="submit">Cerrar Sesión</button>
                 </form>
                 {{#if noAdmin}}
-                    <form action="/premium" method="GET">
-                        <button class="btn btn-warning btn-premium button-in-profile" type="submit">
-                            <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1725258192/corona_siprr5.png" alt="">
-                            Volverse Premium
-                        </button>
-                    </form>
+                {{#if noPremium}}
+                <form action="/premium" method="GET">
+                    <button class="btn btn-warning btn-premium button-in-profile" type="submit">
+                        <img src="https://res.cloudinary.com/dyktfxjer/image/upload/v1725258192/corona_siprr5.png"
+                            alt="">
+                        Volverse Premium
+                    </button>
+                </form>
+                {{/if}}
                 {{/if}}
             </div>
         </div>

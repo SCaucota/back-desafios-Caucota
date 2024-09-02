@@ -68,7 +68,13 @@ class ViewsController {
     };
 
     renderChat = async (req, res) => {
-        res.render("chat", {chatActive: true, noAdmin: req.user.role !== "admin", userPremium: req.user.role === "premium"});
+        res.render("chat", {
+            chatActive: true, 
+            noAdmin: req.user.role !== "admin", 
+            userPremium: req.user.role === "premium",
+            username: req.user.username,
+            user: req.user
+        });
     };
 
     renderRealTimeProducts = async (req, res) => {
@@ -188,8 +194,10 @@ class ViewsController {
     renderPremium = async (req, res) => {
         res.render("premium", {
             user: req.user, 
-            withoutDocuments: req.user.docuements.length === 0,
+            withoutDocuments: req.user.documents.length === 0,
             withDocuments: req.user.documents.length !== 0,
+            noAdmin: req.user.role !== "admin",
+            isAdmin: req.user.role === "admin"
         });
     }
 
@@ -205,6 +213,7 @@ class ViewsController {
         res.render("profile", { 
             user: req.user, 
             userPremium: req.user.role === "premium", 
+            noPremium: req.user.role === "user",
             noAdmin: req.user.role !== "admin", 
             isAdmin: req.user.role === "admin" 
         });

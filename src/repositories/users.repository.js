@@ -18,6 +18,14 @@ class UserRepository {
         }
     }
 
+    async getUserByUserName(username){
+        try {
+            return await UserModel.findOne({username}).lean();
+        } catch (error) {
+            throw new Error("Error al buscar el usuario por el username", error)
+        }
+    }
+
     async getAllUsers() {
         try {
             const users = await UserModel.find().lean();

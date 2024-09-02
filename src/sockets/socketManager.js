@@ -59,8 +59,16 @@ class SocketManager {
                 }
             });
 
+            const messages = await MessageModel.find();
+            socket.emit("message", messages);
+
             socket.on("message", async data => {
-                await MessageModel.create(data);
+                const { user } = socket.request;
+                const messageData = {
+                    user: user.username,
+                    message: data.message
+                };
+                await MessageModel.create(messageData);
                 const messages = await MessageModel.find();
                 this.io.sockets.emit("message", messages);
             });

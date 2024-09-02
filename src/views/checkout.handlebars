@@ -1,18 +1,25 @@
-{{#if isEmpty}}
-    <h2>¡Ups!</h2>
-    <p>No hay stock para ninguno de los libros agregados al carrito</p>
-    <p>Ingresa menos cantidad de libros</p>
-    <a href="/products">Volver a products</a>
-{{else}}
-    <h2>Checkout</h2>
-
-    <p>Tu compra se realizó exitosamente</p>
-    <p>El número de compra es <strong>{{ticketId}}</strong></p>
-
-    {{#if unprocessedProducts}}
-        <p>Algunos libros no se procesaron en la compra por stock insuficiente</p>
-        <a class="btn btn-primary" href="/carts/{{cartId}}">Ver carrito</a>
-    {{/if}}
-
-    <a href="/products">Volver a la página de productos</a>
-{{/if}}
+<section id="section-checkout">
+    <div class="checkout-container">
+        {{#if isEmpty}}
+            <h2>¡Ups!</h2>
+            <div>
+                <p>No hay stock para ninguno de los libros agregados al carrito</p>
+                <p>Ingresa menos cantidad de libros</p>
+                <a class="btn btn-dark btn-back" href="/products">Volver a products</a>
+            </div>
+        {{else}}
+            <h2>Checkout</h2>
+        
+            <div>
+                <p>¡Genial!</p>
+                <p>Tu compra se realizó exitosamente</p>
+                <p>El número de compra es <strong>{{ticketId}}</strong></p>
+                {{#if unprocessedProducts}}
+                    <p>Algunos libros no se procesaron en la compra por stock insuficiente</p>
+                    <a class="btn btn-primary" href="/carts/{{cartId}}">Ver carrito</a>
+                {{/if}}
+                <a class="btn btn-dark btn-back" href="/products">Volver a la página de productos</a>
+            </div>
+        {{/if}}
+    </div>
+</section>

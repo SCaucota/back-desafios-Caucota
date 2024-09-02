@@ -1,25 +1,28 @@
 {{>header}}
-<h1>Real Time Products</h1>
-<h2>Productos actualizados en tiempo real</h2>
+<section id="section-realtimeproducts">
+    <div id="productsContainer"></div>
 
-<div id="productsContainer"></div>
+    <h2 class="form-title-product">Formulario para agregar productos</h2>
 
-<h2>Formulario para agregar productos</h2>
-
-<form id="formAddProduct" method="POST">
-    <input type="text" id="title" name="title" placeholder="Titulo" value="testTitle">
-    <input type="text" id="description" name="description" placeholder="Descripcion" value="testDescription">
-    <input type="number" id="price" name="price" placeholder="Precio" value="1234">
-    <input type="file" id="img" name="img" accept="image/*" required> 
-    <input type="text" id="code" name="code" placeholder="Código" value="testCode">
-    <input type="number" id="stock" name="stock" placeholder="Stock" value="1234">
-    <input type="text" id="category" name="category" placeholder="Categoria" value="testCategory">
-    <select id="status" name="status">
-        <option value="true"> Activo </option>
-        <option value="false"> Inactivo </option>
-    </select>
-    <button id="btnSend"> Enviar </button>
-</form>
+    <div class="form-container-realtimeproducts">
+        <form id="formAddProduct" method="POST">
+            <input class="form-control" type="text" id="title" name="title" placeholder="Titulo" value="testTitle">
+            <input class="form-control" type="text" id="description" name="description" placeholder="Descripcion"
+                value="testDescription">
+            <input class="form-control" type="number" id="price" name="price" placeholder="Precio" value="1234">
+            <input class="form-control" type="file" id="img" name="img" accept="image/*" required>
+            <input class="form-control" type="text" id="code" name="code" placeholder="Código" value="testCode">
+            <input class="form-control" type="number" id="stock" name="stock" placeholder="Stock" value="1234">
+            <input class="form-control" type="text" id="category" name="category" placeholder="Categoria"
+                value="testCategory">
+            <select class="form-select" id="status" name="status">
+                <option selected value="true">Activo</option>
+                <option value="false">Inactivo</option>
+            </select>
+            <button id="btnSend" class="btn btn-dark"> Enviar </button>
+        </form>
+    </div>
+</section>
 
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 <script src="js/main.js"></script>

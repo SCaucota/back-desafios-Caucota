@@ -1,15 +1,30 @@
 {{>header}}
-<h1>¡Chatea con otros usuarios! </h1>
-<h2>Recomienda libros y recibe recomendaciones</h2>
+<section id="section-chat">
+    <h1 class="title-chat">¡Chatea con otros usuarios! </h1>
+    <div class="username-container">
+        <p>Chatearas con tu nombre de usuario: </p>
+        <p id="username">{{username}}</p>
+    </div>
+    <h6 class="text-chat">Recomienda libros y recibe recomendaciones</h6>
+    <p></p>
+    
+    <div class="container-messages">
+        <p id="messagesLogs"></p>
+    </div>
+    
+    <div class="container-chatbox">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" aria-label="Recipient's username"
+                aria-describedby="button-addon2" id="chatBox" placeholder="Escribe...">
+            <button class="btn btn-dark" type="button" id="btn-send-chat">
+                <img src="/assets/icons/enviar.png" alt="icon-enviar">
+            </button>
+        </div>
+    </div>
+</section>
 
-<div>
-    <input type="text" id="chatBox">
-</div>
-
-<div>
-    <p id="messagesLogs"></p>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+
 <script src="js/chat.js"></script>

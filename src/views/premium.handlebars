@@ -1,28 +1,57 @@
-<h1>Poceso de cambio a Premium</h1>
+{{>header}}
+<section id="section-premium">
+    {{#if withoutDocuments}}
+    <h1>Poceso de cambio a Premium</h1>
 
-<h3>Para volverse premium debe cumplir con los siguientes requisitos</h3>
-{{#if withoutDocuments}}
+    <h5>Para volverse premium debe subir los siguientes documentos</h5>
     <form id="formDocuments" method="POST" action="/api/users/{{user._id}}/documents" enctype="multipart/form-data">
-        <label for="profile">Foto de Perfil</label>
-        <input type="file" name="profile" id="profile" required>
-        
-        <label for="products">Cargar Producto</label>
-        <input type="file" name="products" id="products" required>
-        
-        <label for="documents">Identificación</label>
-        <input type="file" name="documents" id="documents" required>
-        
-        <label for="documents">Comprobante de Estado de Cuenta</label>
-        <input type="file" name="documents" id="documents" required>
-        
-        <label for="documents">Comprobante de domicilio</label>
-        <input type="file" name="documents" id="documents" required>
-        
-        <button class="btn-upload-documents" data-user="{{user._id}}" type="submit">Subir Documentos</button>
+        {{!-- <label for="profile">Foto de Perfil</label>
+        <input type="file" name="profile" id="profile" required> --}}
+
+        <div class="input-group mb-3 input-group-premium">
+            <label class="input-group-text" for="profile">Foto de Perfil</label>
+            <input type="file" class="form-control" name="profile" id="profile" required>
+        </div>
+
+        {{!-- <label for="products">Cargar Producto</label>
+        <input type="file" name="products" id="products" required> --}}
+
+        <div class="input-group mb-3 input-group-premium">
+            <label class="input-group-text" for="products">Producto</label>
+            <input type="file" class="form-control" name="products" id="products" required>
+        </div>
+
+        {{!-- <label for="documents">Identificación</label>
+        <input type="file" name="documents" id="documents" required> --}}
+
+        <div class="input-group mb-3 input-group-premium">
+            <label class="input-group-text" for="documents">Identificación</label>
+            <input type="file" class="form-control" name="documents" id="documents" required>
+        </div>
+
+        {{!-- <label for="documents">Comprobante de Estado de Cuenta</label>
+        <input type="file" name="documents" id="documents" required> --}}
+
+        <div class="input-group mb-3 input-group-premium">
+            <label class="input-group-text" for="documents">Comprobante de Estado de Cuenta</label>
+            <input type="file" class="form-control" name="documents" id="documents" required>
+        </div>
+
+        {{!-- <label for="documents">Comprobante de domicilio</label>
+        <input type="file" name="documents" id="documents" required> --}}
+
+        <div class="input-group mb-3 input-group-premium">
+            <label class="input-group-text" for="documents">Comprobante de domicilio</label>
+            <input type="file" class="form-control" name="documents" id="documents" required>
+        </div>
+
+        <button class="btn-upload-documents btn btn-success" data-user="{{user._id}}" type="submit">Subir Documentos</button>
     </form>
-{{/if}}
-{{#if withDocuments}}
-    <h2>¡Genial! Haz subido correctamente los archivos</h2>
-    <p>Ahora debe esperar a que el administrador verifique sus datos y cambie su Rol</p>
-    <p>En breve será informado si el cambio fue exitoso</p>
-{{/if}}
+    {{else}}
+        <div class="data-uploades-div">
+            <h2>¡Genial! Haz subido correctamente los archivos</h2>
+            <p>Ahora debe esperar a que el administrador verifique sus datos y cambie su Rol</p>
+            <p>Si el cambio fue exitoso, veras en su perfil "Usuario Premium"</p>
+        </div>
+    {{/if}}
+</section>
